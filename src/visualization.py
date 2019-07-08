@@ -1,0 +1,154 @@
+import pygame as pg
+import numpy as np
+
+
+class InitializeScreen:
+    def __init__(self, screenWidth, screenHeight):
+        self.screenWidth = screenWidth
+        self.screenHeight = screenHeight
+
+    def __call__(self):
+        pg.init()
+        screen = pg.display.set_mode((self.screenWidth, self.screenHeight))
+        return screen
+
+
+class DrawBackGround():
+    def __init__(self, screen, screenColor, xBoundary, yBoundary, lineColor, lineWidth):
+        self.screen = screen
+        self.screenColor = screenColor
+        self.xBoundary = xBoundary
+        self.yBoundary = yBoundary
+        self.lineColor = lineColor
+        self.lineWidth = lineWidth
+
+    def __call__(self):
+        self.screen.fill(self.screenColor)
+        rectPos = [self.xBoundary[0], self.yBoundary[0], self.xBoundary[1], self.yBoundary[1]]
+        pg.draw.rect(self.screen, self.lineColor, rectPos, self.lineWidth)
+        return
+
+
+class DrawFixationPoint():
+    def __init__(self, screen, drawBackground, fixationPointColor):
+        self.screen = screen
+        self.drawBackground = drawBackground
+        self.screenCenter = [int(self.screen.get_width() / 2), int(self.screen.get_height() / 2)]
+        self.fixationPointColor = fixationPointColor
+
+    def __call__(self):
+        for i in range(10):
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    pg.quit()
+                    sys.exit()
+            self.drawBackground()
+            pg.draw.circle(self.screen, self.fixationPointColor, self.screenCenter, 5)
+            pg.display.flip()
+            pg.time.wait(10)
+        return
+
+
+class DrawState():
+    def __init__(self, drawBackground, numOfAgent, screen, circleSize):
+        self.drawBackground = drawBackground
+        self.numOfAgent = numOfAgent
+        self.screen = screen
+        self.circleSize = circleSize
+
+    def __call__(self, state, circleColorList):
+        self.drawBackground()
+        for j in range(1):
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    pg.quit()
+            for i in range(self.numOfAgent):
+                agentPos = state[i]
+                pg.draw.circle(self.screen, circleColorList[i], [np.int(
+                    agentPos[0]), np.int(agentPos[1])], self.circleSize)
+            pg.display.flip()
+            pg.time.wait(10)
+
+
+class DrawImage():
+    def __init__(self, screen):
+        self.screen = screen
+        self.screenCenter = (self.screen.get_width() / 2, self.screen.get_height() / 2)
+
+    def __call__(self, image):
+        imageRect = image.get_rect()
+        imageRect.center = self.screenCenter
+        pause = True
+        pg.event.set_allowed([pg.KEYDOWN, pg.KEYUP, pg.QUIT])
+        self.screen.blit(image, imageRect)
+        pg.display.flip()
+        while pause:
+            pg.time.wait(10)
+            for event in pg.event.get():
+                if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
+                    pause = False
+                elif event.type == pg.QUIT:
+                    pg.quit()
+            pg.time.wait(10)
+        pg.event.set_blocked([pg.KEYDOWN, pg.KEYUP, pg.QUIT])
+
+
+class DrawImageClick():
+    def __init__(self, screen, imageHeight, drawText):
+        self.screen = screen
+        self.imageHeight = imageHeight
+        self.screenCenter = (self.screen.get_width() / 2, self.imageHeight)
+        self.drawText = drawText
+
+    def __call__(self, image, text, circleColorList):
+        imageRect = image.get_rect()
+        imageRect.center = self.screenCenter
+        pause = True
+        self.screen.blit(image, imageRect)
+        screensurf = pg.display.get_surface()
+        pg.display.flip()
+        while pause:
+            pg.time.wait(10)
+            for event in pg.event.get():
+                if event.type == pg.MOUSEBUTTONDOWN:
+                    mousePos = pg.mouse.get_pos()
+                    mousePixel = screensurf.get_at(mousePos)
+                    if mousePixel in circleColorList:
+                        self.drawText(text, mousePos)
+                        chosenIndex = circleColorList.index(mousePixel)
+                        pause = False
+                elif event.type == pg.QUIT:
+                    pg.quit()
+            pg.time.wait(10)
+        return chosenIndex
+
+
+class DrawText():
+    def __init__(self, screen, fontSize, textColor):
+        self.screen = screen
+        self.fontSize = fontSize
+        self.textColor = textColor
+
+    def __call__(self, text, textPosition):
+        font = pg.font.Font(None, self.fontSize)
+        textObj = font.render(text, 1, self.textColor)
+        self.screen.blit(textObj, textPosition)
+        pg.display.flip()
+        return
+
+
+if __name__ == "__main__":
+    pg.init()
+    screenWidth = 720
+    screenHeight = 720
+    screen = pg.display.set_mode((screenWidth, screenHeight))
+    import os
+    picturePath = os.path.abspath(os.path.join(
+        os.getcwd(), os.pardir)) + '/pictures/'
+    restImage = pg.image.load(picturePath + 'rest.png')
+    drawImage = DrawImage(screen)
+    introductionImage = pg.image.load(picturePath + 'introduction.png')
+    introductionImage = pg.transform.scale(introductionImage, (screenWidth, screenHeight))
+    drawImage(introductionImage)
+    pg.time.wait(100)
+    pg.quit()
