@@ -20,13 +20,13 @@ class CheckHumanResponse():
                     reactionTime = time.get_ticks() - initialTime
                     results['response'] = self.keysForCheck['f']
                     results['reactionTime'] = str(reactionTime)
-                    pause = True
+                    pause = False
 
                 if event.key == pg.K_j:
                     reactionTime = time.get_ticks() - initialTime
                     results['response'] = self.keysForCheck['j']
                     results['reactionTime'] = str(reactionTime)
-                    pause = True
+                    pause = False
 
         pg.display.update()
         return results, pause
@@ -40,17 +40,15 @@ class PressToContinue():
         pause = True
         pg.event.set_allowed(allowedKeyList)
         while pause:
-            pg.time.wait(10)
             for event in pg.event.get():
                 if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
                     pause = False
                 elif event.type == pg.QUIT:
                     pg.quit()
-            pg.time.wait(10)
 
 
 class ChaseTrial():
-    def __init__(self, displayFrames, drawState, drawImage, stimulus, checkHumanResponse, colorSpace, numOfAgent, drawFixationPoint, drawImageClick, clickWolfImage, clickSheepImage):
+    def __init__(self, displayFrames, drawState, drawImage, stimulus, checkHumanResponse, colorSpace, numOfAgent, drawFixationPoint, drawImageClick, clickWolfImage, clickSheepImage, fps):
         self.displayFrames = displayFrames
         self.stimulus = stimulus
         self.drawState = drawState
@@ -62,6 +60,7 @@ class ChaseTrial():
         self.drawImageClick = drawImageClick
         self.clickWolfImage = clickWolfImage
         self.clickSheepImage = clickSheepImage
+        self.fps = fps
 
     def __call__(self, condition):
         results = co.OrderedDict()
@@ -76,15 +75,18 @@ class ChaseTrial():
         random.shuffle(self.colorSpace)
         circleColorList = self.colorSpace[:self.numOfAgent]
 
-        pause = False
+        pause = True
         initialTime = time.get_ticks()
-        while not pause:
+        while pause:
+            fpsClock = pg.time.Clock()
             self.drawFixationPoint()
             for t in range(self.displayFrames):
                 state = trajetoryData[t]
-                self.drawState(state, circleColorList)
+                # self.drawState(state, circleColorList)
+                self.drawState(state, condition, circleColorList)
+                fpsClock.tick(self.fps)
                 results, pause = self.checkHumanResponse(initialTime, results, pause, circleColorList)
-                if pause:
+                if not pause:
                     break
             if not results:
                 results, pause = self.checkHumanResponse(initialTime, results, pause, circleColorList)
@@ -94,4 +96,5 @@ class ChaseTrial():
                 chosenSheepIndex = self.drawImageClick(self.clickSheepImage, 'S', circleColorList)
                 results['chosenWolfIndex'] = chosenWolfIndex
                 results['chosenSheepIndex'] = chosenSheepIndex
+                # pg.time.wait(1000)
         return results

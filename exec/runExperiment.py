@@ -11,7 +11,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from src.design import createDesignValues, samplePosition
 from src.experiment import Experiment
 from src.trial import ChaseTrial, CheckHumanResponse
-from src.visualization import DrawState, DrawImage, DrawBackGround, DrawImageClick, DrawText, DrawFixationPoint
+from src.visualization import DrawState, DrawImage, DrawBackGround, DrawImageClick, DrawText, DrawFixationPoint, DrawStateWithRope
 from src.pandasWriter import WriteDataFrameToCSV
 from src.loadChaseData import GenerateTrajetoryData
 
@@ -21,6 +21,7 @@ def main():
     screenWidth = 800
     screenHeight = 800
     screen = pygame.display.set_mode((screenWidth, screenHeight))
+    FPS = 60
 
     numOfAgent = 4
     leaveEdgeSpace = 200
@@ -37,6 +38,7 @@ def main():
     lineColor = THECOLORS['white']
     textColor = THECOLORS['white']
     fixationPointColor = THECOLORS['white']
+    ropeColor = THECOLORS['white']
     colorSpace = [THECOLORS['grey'], THECOLORS['red'], THECOLORS['blue'], THECOLORS['yellow'], THECOLORS['purple'], THECOLORS['orange']]
     random.shuffle(colorSpace)
     # circleColorList = [THECOLORS['grey']] * numOfAgent
@@ -56,17 +58,19 @@ def main():
     clickWolfImage = pygame.image.load(os.path.join(picturePath, 'clickwolf.png'))
     clickSheepImage = pygame.image.load(os.path.join(picturePath, 'clicksheep.png'))
 
+    fixationTime = 30
     drawImage = DrawImage(screen)
     drawText = DrawText(screen, fontSize, textColor)
     drawBackGround = DrawBackGround(screen, screenColor, xBoundary, yBoundary, lineColor, lineWidth)
-    drawFixationPoint = DrawFixationPoint(screen, drawBackGround, fixationPointColor)
+    drawFixationPoint = DrawFixationPoint(screen, drawBackGround, fixationPointColor, fixationTime)
     drawImageClick = DrawImageClick(screen, clickImageHeight, drawText)
     drawState = DrawState(drawBackGround, numOfAgent, screen, circleSize)
+    drawStateWithRope = DrawStateWithRope(drawBackGround, numOfAgent, screen, circleSize, ropeColor)
 
     conditionList = [1, 2, 3, 4]
     trajetoryIndexList = [1, 2, 3, 4, 5]
     dataFileDir = '../PataData'
-    dataSetBoundary = [25, 25]
+    dataSetBoundary = [26, 26]
     generateTrajetoryData = GenerateTrajetoryData(dataFileDir, stimulusXBoundary, stimulusYBoundary, dataSetBoundary)
     stimulus = {condition: generateTrajetoryData(condition, trajetoryIndexList) for condition in conditionList}
 
@@ -82,7 +86,7 @@ def main():
     displayFrames = 600
     keysForCheck = {'f': 0, 'j': 1}
     checkHumanResponse = CheckHumanResponse(keysForCheck)
-    trial = ChaseTrial(displayFrames, drawState, drawImage, stimulus, checkHumanResponse, colorSpace, numOfAgent, drawFixationPoint, drawImageClick, clickWolfImage, clickSheepImage)
+    trial = ChaseTrial(displayFrames, drawStateWithRope, drawImage, stimulus, checkHumanResponse, colorSpace, numOfAgent, drawFixationPoint, drawImageClick, clickWolfImage, clickSheepImage, FPS)
     experiment = Experiment(trial, writer, experimentValues)
 
     numOfBlock = 1

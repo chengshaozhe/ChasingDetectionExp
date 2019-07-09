@@ -35,11 +35,11 @@ while not done:
     # inside the main while done==False loop.
 
     # Clear the screen and set the screen background
-    screen.fill(WHITE)
+    # screen.fill(WHITE)
 
     # Draw on the screen a GREEN line from (0,0) to (50.75)
     # 5 pixels wide.
-    # pygame.draw.line(screen, GREEN, [0, 0], [50,30], 5)
+    # pygame.draw.line(screen, GREEN, [0, 0], [50, 30], 5)
 
     # Draw on the screen a GREEN line from (0,0) to (50.75)
     # 5 pixels wide.
@@ -50,10 +50,10 @@ while not done:
     # pygame.draw.aaline(screen, GREEN, [0, 50],[50, 80], True)
 
     # Draw a rectangle outline
-    # pygame.draw.rect(screen, BLACK, [75, 10, 50, 20], 2)
+    pygame.draw.rect(screen, WHITE, [200, 200, 280, 280], 2)
 
     # Draw a solid rectangle
-    # pygame.draw.rect(screen, BLACK, [150, 10, 50, 20])
+    # pygame.draw.rect(screen, WHITE, [150, 10, 50, 20])
 
     # Draw an ellipse outline, using a rectangle as the outside boundaries
     # pygame.draw.ellipse(screen, RED, [225, 10, 50, 20], 2)
@@ -72,7 +72,7 @@ while not done:
     # pygame.draw.arc(screen, RED,  [210, 75, 150, 125], 3*pi/2, 2*pi, 2)
 
     # Draw a circle
-    pygame.draw.circle(screen, BLUE, [200, 150], 5)
+    # pygame.draw.circle(screen, BLUE, [200, 150], 5)
 
     # Go ahead and update the screen with what we've drawn.
     # This MUST happen after all the other drawing commands.

@@ -30,44 +30,71 @@ class DrawBackGround():
 
 
 class DrawFixationPoint():
-    def __init__(self, screen, drawBackground, fixationPointColor):
+    def __init__(self, screen, drawBackGround, fixationPointColor, fixationTime):
         self.screen = screen
-        self.drawBackground = drawBackground
+        self.drawBackGround = drawBackGround
         self.screenCenter = [int(self.screen.get_width() / 2), int(self.screen.get_height() / 2)]
         self.fixationPointColor = fixationPointColor
+        self.fixationTime = fixationTime
 
     def __call__(self):
-        for i in range(10):
+        for i in range(self.fixationTime):
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     pg.quit()
                     sys.exit()
-            self.drawBackground()
+            self.drawBackGround()
             pg.draw.circle(self.screen, self.fixationPointColor, self.screenCenter, 5)
             pg.display.flip()
-            pg.time.wait(10)
         return
 
 
 class DrawState():
-    def __init__(self, drawBackground, numOfAgent, screen, circleSize):
-        self.drawBackground = drawBackground
+    def __init__(self, drawBackGround, numOfAgent, screen, circleSize):
+        self.drawBackGround = drawBackGround
         self.numOfAgent = numOfAgent
         self.screen = screen
         self.circleSize = circleSize
 
     def __call__(self, state, circleColorList):
-        self.drawBackground()
-        for j in range(1):
-            for event in pg.event.get():
-                if event.type == pg.QUIT:
-                    pg.quit()
-            for i in range(self.numOfAgent):
-                agentPos = state[i]
-                pg.draw.circle(self.screen, circleColorList[i], [np.int(
-                    agentPos[0]), np.int(agentPos[1])], self.circleSize)
+        self.drawBackGround()
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+        for i in range(self.numOfAgent):
+            agentPos = state[i]
+            pg.draw.circle(self.screen, circleColorList[i], [np.int(
+                agentPos[0]), np.int(agentPos[1])], self.circleSize)
+        pg.display.flip()
+
+
+class DrawStateWithRope():
+    def __init__(self, drawBackGround, numOfAgent, screen, circleSize, ropeColor):
+        self.drawBackGround = drawBackGround
+        self.numOfAgent = numOfAgent
+        self.screen = screen
+        self.circleSize = circleSize
+        self.ropeColor = ropeColor
+
+    def __call__(self, state, condition, circleColorList):
+        self.drawBackGround()
+
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+
+        if condition == 1 or condition == 3:
+            pg.draw.lines(self.screen, self.ropeColor, False, [state[0], state[2]], 5)
+
+        if condition == 2 or condition == 4:
+            pg.draw.lines(self.screen, self.ropeColor, False, [state[0], state[3]], 5)
+
+        for i in range(self.numOfAgent):
+            agentPos = state[i]
+            pg.draw.circle(self.screen, circleColorList[i], [np.int(
+                agentPos[0]), np.int(agentPos[1])], self.circleSize)
+
             pg.display.flip()
-            pg.time.wait(10)
 
 
 class DrawImage():
@@ -83,14 +110,11 @@ class DrawImage():
         self.screen.blit(image, imageRect)
         pg.display.flip()
         while pause:
-            pg.time.wait(10)
             for event in pg.event.get():
                 if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
                     pause = False
                 elif event.type == pg.QUIT:
                     pg.quit()
-            pg.time.wait(10)
-        pg.event.set_blocked([pg.KEYDOWN, pg.KEYUP, pg.QUIT])
 
 
 class DrawImageClick():
@@ -108,7 +132,6 @@ class DrawImageClick():
         screensurf = pg.display.get_surface()
         pg.display.flip()
         while pause:
-            pg.time.wait(10)
             for event in pg.event.get():
                 if event.type == pg.MOUSEBUTTONDOWN:
                     mousePos = pg.mouse.get_pos()
@@ -119,7 +142,6 @@ class DrawImageClick():
                         pause = False
                 elif event.type == pg.QUIT:
                     pg.quit()
-            pg.time.wait(10)
         return chosenIndex
 
 
@@ -150,5 +172,4 @@ if __name__ == "__main__":
     introductionImage = pg.image.load(picturePath + 'introduction.png')
     introductionImage = pg.transform.scale(introductionImage, (screenWidth, screenHeight))
     drawImage(introductionImage)
-    pg.time.wait(100)
     pg.quit()
