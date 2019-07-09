@@ -78,6 +78,7 @@ class ChaseTrial():
         pause = True
         initialTime = time.get_ticks()
         while pause:
+            pg.mouse.set_visible(False)
             fpsClock = pg.time.Clock()
             self.drawFixationPoint()
             for t in range(self.displayFrames):
@@ -92,6 +93,7 @@ class ChaseTrial():
                 results, pause = self.checkHumanResponse(initialTime, results, pause, circleColorList)
 
             if results['response'] == 1:
+                pg.mouse.set_visible(True)
                 chosenWolfIndex = self.drawImageClick(self.clickWolfImage, "W", circleColorList)
                 chosenSheepIndex = self.drawImageClick(self.clickSheepImage, 'S', circleColorList)
                 results['chosenWolfIndex'] = chosenWolfIndex

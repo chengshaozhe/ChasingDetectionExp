@@ -136,6 +136,7 @@ class DrawImageClick():
                         self.drawText(text, mousePos)
                         chosenIndex = circleColorList.index(mousePixel)
                         pause = False
+
                 elif event.type == pg.QUIT:
                     pg.quit()
         return chosenIndex
