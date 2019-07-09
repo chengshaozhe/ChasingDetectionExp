@@ -3,13 +3,17 @@ import numpy as np
 
 
 class InitializeScreen:
-    def __init__(self, screenWidth, screenHeight):
+    def __init__(self, screenWidth, screenHeight, fullScreen):
         self.screenWidth = screenWidth
         self.screenHeight = screenHeight
+        self.fullScreen = fullScreen
 
     def __call__(self):
         pg.init()
-        screen = pg.display.set_mode((self.screenWidth, self.screenHeight))
+        if self.fullScreen:
+            screen = pg.display.set_mode((self.screenWidth, self.screenHeight), pg.FULLSCREEN)
+        else:
+            screen = pg.display.set_mode((self.screenWidth, self.screenHeight))
         return screen
 
 
@@ -23,6 +27,12 @@ class DrawBackGround():
         self.lineWidth = lineWidth
 
     def __call__(self):
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_ESCAPE:
+                    exit()
         self.screen.fill(self.screenColor)
         rectPos = [self.xBoundary[0], self.yBoundary[0], self.xBoundary[1], self.yBoundary[1]]
         pg.draw.rect(self.screen, self.lineColor, rectPos, self.lineWidth)
@@ -37,10 +47,6 @@ class DrawFixationPoint():
         self.fixationPointColor = fixationPointColor
 
     def __call__(self):
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                pg.quit()
-                sys.exit()
         self.drawBackGround()
         pg.draw.circle(self.screen, self.fixationPointColor, self.screenCenter, 5)
         pg.display.flip()
@@ -57,9 +63,6 @@ class DrawState():
 
     def __call__(self, state, circleColorList):
         self.drawBackGround()
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                pg.quit()
         for i in range(self.numOfAgent):
             agentPos = state[i]
             pg.draw.circle(self.screen, circleColorList[i], [np.int(
@@ -78,9 +81,6 @@ class DrawStateWithRope():
 
     def __call__(self, state, condition, circleColorList):
         self.drawBackGround()
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                pg.quit()
         if condition == 1 or condition == 3:
             pg.draw.lines(self.screen, self.ropeColor, False, [state[0], state[2]], 5)
         if condition == 2 or condition == 4:
@@ -136,7 +136,6 @@ class DrawImageClick():
                         self.drawText(text, mousePos)
                         chosenIndex = circleColorList.index(mousePixel)
                         pause = False
-
                 elif event.type == pg.QUIT:
                     pg.quit()
         return chosenIndex

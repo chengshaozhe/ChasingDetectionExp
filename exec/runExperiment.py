@@ -11,17 +11,18 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from src.design import createDesignValues, samplePosition
 from src.experiment import Experiment
 from src.trial import ChaseTrial, CheckHumanResponse
-from src.visualization import DrawState, DrawImage, DrawBackGround, DrawImageClick, DrawText, DrawFixationPoint, DrawStateWithRope
+from src.visualization import InitializeScreen, DrawState, DrawImage, DrawBackGround, DrawImageClick, DrawText, DrawFixationPoint, DrawStateWithRope
 from src.pandasWriter import WriteDataFrameToCSV
 from src.loadChaseData import GenerateTrajetoryData
 
 
 def main():
-    pygame.init()
     screenWidth = 800
     screenHeight = 800
-    screen = pygame.display.set_mode((screenWidth, screenHeight))
     FPS = 60
+    fullScreen = False
+    initializeScreen = InitializeScreen(screenWidth, screenHeight, fullScreen)
+    screen = initializeScreen()
 
     numOfAgent = 4
     leaveEdgeSpace = 200
