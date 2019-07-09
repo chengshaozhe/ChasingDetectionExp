@@ -58,11 +58,10 @@ def main():
     clickWolfImage = pygame.image.load(os.path.join(picturePath, 'clickwolf.png'))
     clickSheepImage = pygame.image.load(os.path.join(picturePath, 'clicksheep.png'))
 
-    fixationTime = 30
     drawImage = DrawImage(screen)
     drawText = DrawText(screen, fontSize, textColor)
     drawBackGround = DrawBackGround(screen, screenColor, xBoundary, yBoundary, lineColor, lineWidth)
-    drawFixationPoint = DrawFixationPoint(screen, drawBackGround, fixationPointColor, fixationTime)
+    drawFixationPoint = DrawFixationPoint(screen, drawBackGround, fixationPointColor)
     drawImageClick = DrawImageClick(screen, clickImageHeight, drawText)
     drawState = DrawState(drawBackGround, numOfAgent, screen, circleSize)
     drawStateWithRope = DrawStateWithRope(drawBackGround, numOfAgent, screen, circleSize, ropeColor)

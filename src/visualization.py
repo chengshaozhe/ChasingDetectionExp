@@ -30,22 +30,21 @@ class DrawBackGround():
 
 
 class DrawFixationPoint():
-    def __init__(self, screen, drawBackGround, fixationPointColor, fixationTime):
+    def __init__(self, screen, drawBackGround, fixationPointColor):
         self.screen = screen
         self.drawBackGround = drawBackGround
         self.screenCenter = [int(self.screen.get_width() / 2), int(self.screen.get_height() / 2)]
         self.fixationPointColor = fixationPointColor
-        self.fixationTime = fixationTime
 
     def __call__(self):
-        for i in range(self.fixationTime):
-            for event in pg.event.get():
-                if event.type == pg.QUIT:
-                    pg.quit()
-                    sys.exit()
-            self.drawBackGround()
-            pg.draw.circle(self.screen, self.fixationPointColor, self.screenCenter, 5)
-            pg.display.flip()
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+                sys.exit()
+        self.drawBackGround()
+        pg.draw.circle(self.screen, self.fixationPointColor, self.screenCenter, 5)
+        pg.display.flip()
+        pg.time.wait(1000)
         return
 
 
@@ -66,6 +65,7 @@ class DrawState():
             pg.draw.circle(self.screen, circleColorList[i], [np.int(
                 agentPos[0]), np.int(agentPos[1])], self.circleSize)
         pg.display.flip()
+        pg.time.wait(10)
 
 
 class DrawStateWithRope():
@@ -78,23 +78,19 @@ class DrawStateWithRope():
 
     def __call__(self, state, condition, circleColorList):
         self.drawBackGround()
-
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
-
         if condition == 1 or condition == 3:
             pg.draw.lines(self.screen, self.ropeColor, False, [state[0], state[2]], 5)
-
         if condition == 2 or condition == 4:
             pg.draw.lines(self.screen, self.ropeColor, False, [state[0], state[3]], 5)
-
         for i in range(self.numOfAgent):
             agentPos = state[i]
             pg.draw.circle(self.screen, circleColorList[i], [np.int(
                 agentPos[0]), np.int(agentPos[1])], self.circleSize)
-
             pg.display.flip()
+        pg.time.wait(10)
 
 
 class DrawImage():

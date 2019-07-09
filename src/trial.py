@@ -96,5 +96,5 @@ class ChaseTrial():
                 chosenSheepIndex = self.drawImageClick(self.clickSheepImage, 'S', circleColorList)
                 results['chosenWolfIndex'] = chosenWolfIndex
                 results['chosenSheepIndex'] = chosenSheepIndex
-                # pg.time.wait(1000)
+                pg.time.wait(500)
         return results
