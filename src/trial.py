@@ -108,15 +108,15 @@ class ChaseTrial():
                     self.drawText('Please Response Now!', (screen.get_width() / 4, screen.get_height() / 2))
                     results, pause = self.checkHumanResponse(initialTime, results, pause, circleColorList)
 
-                if not pause:
-                    results, pause = self.checkHumanResponse(initialTime, results, pause, circleColorList)
+            if not pause:
+                results, pause = self.checkHumanResponse(initialTime, results, pause, circleColorList)
 
-                if results['response'] == 1:
-                    pg.mouse.set_visible(True)
-                    chosenWolfIndex = self.drawImageClick(self.clickWolfImage, "W", circleColorList)
-                    chosenSheepIndex = self.drawImageClick(self.clickSheepImage, 'S', circleColorList)
-                    results['chosenWolfIndex'] = chosenWolfIndex
-                    results['chosenSheepIndex'] = chosenSheepIndex
-                    pg.time.wait(500)
+            if results['response'] == 1:
+                pg.mouse.set_visible(True)
+                chosenWolfIndex = self.drawImageClick(self.clickWolfImage, "W", circleColorList)
+                chosenSheepIndex = self.drawImageClick(self.clickSheepImage, 'S', circleColorList)
+                results['chosenWolfIndex'] = chosenWolfIndex
+                results['chosenSheepIndex'] = chosenSheepIndex
+                pg.time.wait(500)
 
         return results
