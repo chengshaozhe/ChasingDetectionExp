@@ -4,6 +4,7 @@ import collections as co
 import pygame as pg
 from pygame import time
 from pygame.color import THECOLORS
+import os
 
 
 class CheckHumanResponse():
@@ -48,7 +49,7 @@ class PressToContinue():
 
 
 class ChaseTrial():
-    def __init__(self, displayFrames, drawState, drawImage, stimulus, checkHumanResponse, colorSpace, numOfAgent, drawFixationPoint, drawImageClick, clickWolfImage, clickSheepImage, fps):
+    def __init__(self, displayFrames, drawState, drawImage, stimulus, checkHumanResponse, colorSpace, numOfAgent, drawFixationPoint, drawText, drawImageClick, clickWolfImage, clickSheepImage, fps, saveImage, saveImageFile):
         self.displayFrames = displayFrames
         self.stimulus = stimulus
         self.drawState = drawState
@@ -57,10 +58,13 @@ class ChaseTrial():
         self.colorSpace = colorSpace
         self.numOfAgent = numOfAgent
         self.drawFixationPoint = drawFixationPoint
+        self.drawText = drawText
         self.drawImageClick = drawImageClick
         self.clickWolfImage = clickWolfImage
         self.clickSheepImage = clickSheepImage
         self.fps = fps
+        self.saveImage = saveImage
+        self.saveImageFile = saveImageFile
 
     def __call__(self, condition):
         results = co.OrderedDict()
@@ -77,26 +81,43 @@ class ChaseTrial():
 
         pause = True
         initialTime = time.get_ticks()
+        fpsClock = pg.time.Clock()
         while pause:
             pg.mouse.set_visible(False)
-            fpsClock = pg.time.Clock()
             self.drawFixationPoint()
             for t in range(self.displayFrames):
                 state = trajetoryData[t]
-                # self.drawState(state, circleColorList)
-                self.drawState(state, condition, circleColorList)
                 fpsClock.tick(self.fps)
+
+                screen = self.drawState(state, circleColorList)
+                # screen = self.drawState(state, condition, circleColorList)
+
+                if self.saveImage == True:
+                    currentDir = os.getcwd()
+                    parentDir = os.path.abspath(os.path.join(currentDir, os.pardir))
+                    saveImageDir = os.path.join(os.path.join(parentDir, 'data'), self.saveImageFile)
+                    if not os.path.exists(saveImageDir):
+                        os.makedirs(saveImageDir)
+                    pg.image.save(screen, saveImageDir + '/' + format(t, '04') + ".png")
+
                 results, pause = self.checkHumanResponse(initialTime, results, pause, circleColorList)
                 if not pause:
                     break
-            if not results:
-                results, pause = self.checkHumanResponse(initialTime, results, pause, circleColorList)
 
-            if results['response'] == 1:
-                pg.mouse.set_visible(True)
-                chosenWolfIndex = self.drawImageClick(self.clickWolfImage, "W", circleColorList)
-                chosenSheepIndex = self.drawImageClick(self.clickSheepImage, 'S', circleColorList)
-                results['chosenWolfIndex'] = chosenWolfIndex
-                results['chosenSheepIndex'] = chosenSheepIndex
-                pg.time.wait(500)
+                if t == self.displayFrames - 1:
+                    break
+                    self.drawText('Please Response Now!', (screen.get_width() / 4, screen.get_height() / 2))
+                    results, pause = self.checkHumanResponse(initialTime, results, pause, circleColorList)
+
+                if not pause:
+                    results, pause = self.checkHumanResponse(initialTime, results, pause, circleColorList)
+
+                if results['response'] == 1:
+                    pg.mouse.set_visible(True)
+                    chosenWolfIndex = self.drawImageClick(self.clickWolfImage, "W", circleColorList)
+                    chosenSheepIndex = self.drawImageClick(self.clickSheepImage, 'S', circleColorList)
+                    results['chosenWolfIndex'] = chosenWolfIndex
+                    results['chosenSheepIndex'] = chosenSheepIndex
+                    pg.time.wait(500)
+
         return results

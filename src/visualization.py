@@ -1,5 +1,6 @@
 import pygame as pg
 import numpy as np
+import os
 
 
 class InitializeScreen:
@@ -67,8 +68,10 @@ class DrawState():
             agentPos = state[i]
             pg.draw.circle(self.screen, circleColorList[i], [np.int(
                 agentPos[0]), np.int(agentPos[1])], self.circleSize)
+
         pg.display.flip()
-        pg.time.wait(10)
+        # pg.time.wait(10)
+        return self.screen
 
 
 class DrawStateWithRope():
@@ -92,6 +95,8 @@ class DrawStateWithRope():
             pg.display.flip()
         pg.time.wait(10)
 
+        return self.screen
+
 
 class DrawImage():
     def __init__(self, screen):
@@ -109,7 +114,7 @@ class DrawImage():
             for event in pg.event.get():
                 if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
                     pause = False
-                elif event.type == pg.QUIT:
+                elif event.type == pg.QUIT and event.key == pg.K_ESCAPE:
                     pg.quit()
 
 

@@ -24,6 +24,9 @@ def main():
     initializeScreen = InitializeScreen(screenWidth, screenHeight, fullScreen)
     screen = initializeScreen()
 
+    saveImage = False
+    saveImageFile = 'noRopeCondition1'
+
     numOfAgent = 4
     leaveEdgeSpace = 200
     circleSize = 10
@@ -86,11 +89,11 @@ def main():
     displayFrames = 600
     keysForCheck = {'f': 0, 'j': 1}
     checkHumanResponse = CheckHumanResponse(keysForCheck)
-    trial = ChaseTrial(displayFrames, drawStateWithRope, drawImage, stimulus, checkHumanResponse, colorSpace, numOfAgent, drawFixationPoint, drawImageClick, clickWolfImage, clickSheepImage, FPS)
+    trial = ChaseTrial(displayFrames, drawState, drawImage, stimulus, checkHumanResponse, colorSpace, numOfAgent, drawFixationPoint, drawText, drawImageClick, clickWolfImage, clickSheepImage, FPS, saveImage, saveImageFile)
     experiment = Experiment(trial, writer, experimentValues)
 
     numOfBlock = 1
-    numOfTrialsPerBlock = 3
+    numOfTrialsPerBlock = 2
     designValues = createDesignValues(conditionList * numOfTrialsPerBlock, numOfBlock)
 
     # drawImage(introductionImage)
