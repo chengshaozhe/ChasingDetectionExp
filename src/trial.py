@@ -105,11 +105,13 @@ class ChaseTrial():
                     break
 
                 if t == self.displayFrames - 1:
-                    self.drawText('Please Response Now!', (screen.get_width() / 4, screen.get_height() / 2))
+                    self.drawText('Please Response Now!', (screen.get_width() / 4, screen.get_height() / 1.2))
                     results, pause = self.checkHumanResponse(initialTime, results, pause, circleColorList)
 
-            if not pause:
-                results, pause = self.checkHumanResponse(initialTime, results, pause, circleColorList)
+            anyResponsed = True
+            while anyResponsed:
+                pg.mouse.set_visible(True)
+                results, anyResponsed = self.checkHumanResponse(initialTime, results, pause, circleColorList)
 
             if results['response'] == 1:
                 pg.mouse.set_visible(True)
