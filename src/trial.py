@@ -105,7 +105,6 @@ class ChaseTrial():
                     break
 
                 if t == self.displayFrames - 1:
-                    break
                     self.drawText('Please Response Now!', (screen.get_width() / 4, screen.get_height() / 2))
                     results, pause = self.checkHumanResponse(initialTime, results, pause, circleColorList)
 
