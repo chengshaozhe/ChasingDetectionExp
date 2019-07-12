@@ -110,7 +110,6 @@ class ChaseTrial():
 
             anyResponsed = True
             while anyResponsed:
-                pg.mouse.set_visible(True)
                 results, anyResponsed = self.checkHumanResponse(initialTime, results, pause, circleColorList)
 
             if results['response'] == 1:
