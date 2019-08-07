@@ -33,7 +33,7 @@ class CheckHumanResponse():
         return results, pause
 
 
-class PressToContinue():
+class f():
     def __init__(self, allowedKey):
         self.allowedKey = allowedKeyList
 
@@ -83,6 +83,7 @@ class ChaseTrial():
         initialTime = time.get_ticks()
         fpsClock = pg.time.Clock()
         while pause:
+            print('pause',pause)
             pg.mouse.set_visible(False)
             self.drawFixationPoint()
             for t in range(self.displayFrames):
@@ -102,16 +103,18 @@ class ChaseTrial():
 
                 results, pause = self.checkHumanResponse(initialTime, results, pause, circleColorList)
                 if not pause:
-                    break
+                    break 
 
                 if t == self.displayFrames - 1:
                     self.drawText('Please Response Now!', (screen.get_width() / 4, screen.get_height() / 1.2))
                     results, pause = self.checkHumanResponse(initialTime, results, pause, circleColorList)
+               
 
+            print('2',pause)
             anyResponsed = True
             while anyResponsed:
                 results, anyResponsed = self.checkHumanResponse(initialTime, results, pause, circleColorList)
-
+            print('3',pause)
             if results['response'] == 1:
                 pg.mouse.set_visible(True)
                 chosenWolfIndex = self.drawImageClick(self.clickWolfImage, "W", circleColorList)
