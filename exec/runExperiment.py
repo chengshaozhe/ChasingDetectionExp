@@ -93,7 +93,6 @@ def main():
     trial = ChaseTrial(displayFrames, drawState, drawImage, stimulus, checkHumanResponse, colorSpace, numOfAgent, drawFixationPoint, drawText, drawImageClick, clickWolfImage, clickSheepImage, FPS, saveImage, saveImageFile)
     
     experiment = Experiment(trial, writer, experimentValues,drawImage,restImage)
-
     numOfBlock = 2
     numOfTrialsPerBlock = 1
     designValues = createDesignValues(conditionList * numOfTrialsPerBlock, numOfBlock)

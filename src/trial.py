@@ -12,7 +12,7 @@ class CheckHumanResponse():
         self.keysForCheck = keysForCheck
 
     def __call__(self, initialTime, results, pause, circleColorList):
-        for event in pg.event.get():
+        for event in pg.fastevent.get():
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit()
@@ -107,14 +107,10 @@ class ChaseTrial():
 
                 if t == self.displayFrames - 1:
                     self.drawText('Please Response Now!', (screen.get_width() / 4, screen.get_height() / 1.2))
-                    results, pause = self.checkHumanResponse(initialTime, results, pause, circleColorList)
+                    while pause:
+                        results, pause = self.checkHumanResponse(initialTime, results, pause, circleColorList)
                
 
-            print('2',pause)
-            anyResponsed = True
-            while anyResponsed:
-                results, anyResponsed = self.checkHumanResponse(initialTime, results, pause, circleColorList)
-            print('3',pause)
             if results['response'] == 1:
                 pg.mouse.set_visible(True)
                 chosenWolfIndex = self.drawImageClick(self.clickWolfImage, "W", circleColorList)

@@ -15,6 +15,8 @@ class InitializeScreen:
             screen = pg.display.set_mode((self.screenWidth, self.screenHeight), pg.FULLSCREEN)
         else:
             screen = pg.display.set_mode((self.screenWidth, self.screenHeight))
+        pg.display.init()
+        pg.fastevent.init()
         return screen
 
 
@@ -33,7 +35,7 @@ class DrawBackGround():
                 pg.quit()
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
-                    exit()
+                    exit()                
         self.screen.fill(self.screenColor)
         rectPos = [self.xBoundary[0], self.yBoundary[0], self.xBoundary[1], self.yBoundary[1]]
         pg.draw.rect(self.screen, self.lineColor, rectPos, self.lineWidth)
