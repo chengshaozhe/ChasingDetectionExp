@@ -87,11 +87,10 @@ class ChaseTrial():
             self.drawFixationPoint()
             for t in range(self.displayFrames):
                 state = trajetoryData[t]
-                fpsClock.tick(self.fps)
-
                 screen = self.drawState(state, circleColorList)
-                # screen = self.drawState(state, condition, circleColorList)
+                # screen = self.drawState(state, condition, circleColorList) # draw rope
 
+                fpsClock.tick(self.fps)
                 if self.saveImage == True:
                     currentDir = os.getcwd()
                     parentDir = os.path.abspath(os.path.join(currentDir, os.pardir))
@@ -108,9 +107,8 @@ class ChaseTrial():
                     self.drawText('Please Response Now!', (screen.get_width() / 4, screen.get_height() / 1.2))
                     results, pause = self.checkHumanResponse(initialTime, results, pause, circleColorList)
 
-            anyResponsed = True
-            while anyResponsed:
-                results, anyResponsed = self.checkHumanResponse(initialTime, results, pause, circleColorList)
+            while pause:
+                results, pause = self.checkHumanResponse(initialTime, results, pause, circleColorList)
 
             if results['response'] == 1:
                 pg.mouse.set_visible(True)

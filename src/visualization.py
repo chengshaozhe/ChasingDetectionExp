@@ -93,8 +93,7 @@ class DrawStateWithRope():
             pg.draw.circle(self.screen, circleColorList[i], [np.int(
                 agentPos[0]), np.int(agentPos[1])], self.circleSize)
             pg.display.flip()
-        pg.time.wait(10)
-
+        # pg.time.wait(10)
         return self.screen
 
 

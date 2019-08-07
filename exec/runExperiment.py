@@ -56,8 +56,10 @@ def main():
     resultsPath = os.path.join(os.path.abspath(os.path.join(os.getcwd(), os.pardir)), 'results')
 
     introductionImage = pygame.image.load(os.path.join(picturePath, 'introduction.png'))
+    restImage = pygame.image.load(os.path.join(picturePath, 'rest.png'))
     finishImage = pygame.image.load(os.path.join(picturePath, 'over.jpg'))
     introductionImage = pygame.transform.scale(introductionImage, (screenWidth, screenHeight))
+    restImage = pygame.transform.scale(restImage, (screenWidth, screenHeight))
     finishImage = pygame.transform.scale(finishImage, (int(screenWidth * 2 / 3), int(screenHeight / 4)))
     clickWolfImage = pygame.image.load(os.path.join(picturePath, 'clickwolf.png'))
     clickSheepImage = pygame.image.load(os.path.join(picturePath, 'clicksheep.png'))
@@ -78,7 +80,6 @@ def main():
     stimulus = {condition: generateTrajetoryData(condition, trajetoryIndexList) for condition in conditionList}
 
     experimentValues = co.OrderedDict()
-    manipulatedVariables = co.OrderedDict()
 
     # experimentValues["name"] = input("Please enter your name:").capitalize()
     experimentValues["name"] = 'csz'
@@ -86,15 +87,16 @@ def main():
     writerPath = os.path.join(resultsPath, experimentValues["name"]) + '.csv'
     writer = WriteDataFrameToCSV(writerPath)
 
-    displayFrames = 600
+    displayFrames = FPS * 3
     keysForCheck = {'f': 0, 'j': 1}
     checkHumanResponse = CheckHumanResponse(keysForCheck)
     trial = ChaseTrial(displayFrames, drawState, drawImage, stimulus, checkHumanResponse, colorSpace, numOfAgent, drawFixationPoint, drawText, drawImageClick, clickWolfImage, clickSheepImage, FPS, saveImage, saveImageFile)
     experiment = Experiment(trial, writer, experimentValues)
 
     numOfBlock = 1
-    numOfTrialsPerBlock = 2
-    designValues = createDesignValues(conditionList * numOfTrialsPerBlock, numOfBlock)
+    numOfConditionLoopsPerBlock = 2
+    designValues = createDesignValues(conditionList * numOfConditionLoopsPerBlock, numOfBlock)
+    numOfTrials = len(designValues)
 
     # drawImage(introductionImage)
     experiment(designValues)
