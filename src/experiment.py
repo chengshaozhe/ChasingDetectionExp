@@ -1,11 +1,12 @@
 import numpy as np
 class Experiment():
-    def __init__(self, trial, writer, experimentValues,darwImage,restImage,):
+    def __init__(self, trial, writer, experimentValues,darwImage,restImage,darwBackground):
         self.trial = trial
         self.writer = writer
         self.experimentValues = experimentValues
         self.darwImage=darwImage
         self.restImage=restImage
+        self.darwBackground=darwBackground
     def __call__(self, designValues,restDuration):
         for trialIndex in range(len(designValues)):          
             condition = designValues[trialIndex]
@@ -18,5 +19,6 @@ class Experiment():
             response.update(results)
             self.writer(response, trialIndex)
             if np.mod(trialIndex+1,restDuration)==0:
+                self.darwBackground()
                 self.darwImage(self.restImage)  
         return results

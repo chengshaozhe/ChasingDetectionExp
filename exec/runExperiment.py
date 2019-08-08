@@ -4,6 +4,7 @@ import collections as co
 import numpy as np
 import random
 import pygame
+import json
 from pygame import time
 from pygame.color import THECOLORS
 
@@ -17,10 +18,15 @@ from src.loadChaseData import GenerateTrajetoryData
 
 
 def main():
+
+    experimentValues = co.OrderedDict()
+    experimentValues["name"] = input("Please enter your name:").capitalize()
+    # experimentValues["name"] = 'csz'
+
     screenWidth = 800
     screenHeight = 800
     FPS = 60
-    fullScreen = False
+    fullScreen = True
     initializeScreen = InitializeScreen(screenWidth, screenHeight, fullScreen)
     screen = initializeScreen()
 
@@ -78,11 +84,9 @@ def main():
     generateTrajetoryData = GenerateTrajetoryData(dataFileDir, stimulusXBoundary, stimulusYBoundary, dataSetBoundary)
     stimulus = {condition: generateTrajetoryData(condition, trajetoryIndexList) for condition in conditionList}
 
-    experimentValues = co.OrderedDict()
+    
     manipulatedVariables = co.OrderedDict()
 
-    # experimentValues["name"] = input("Please enter your name:").capitalize()
-    experimentValues["name"] = 'csz'
 
     writerPath = os.path.join(resultsPath, experimentValues["name"]) + '.csv'
     writer = WriteDataFrameToCSV(writerPath)
@@ -92,7 +96,7 @@ def main():
     checkHumanResponse = CheckHumanResponse(keysForCheck)
     trial = ChaseTrial(displayFrames, drawState, drawImage, stimulus, checkHumanResponse, colorSpace, numOfAgent, drawFixationPoint, drawText, drawImageClick, clickWolfImage, clickSheepImage, FPS, saveImage, saveImageFile)
     
-    experiment = Experiment(trial, writer, experimentValues,drawImage,restImage)
+    experiment = Experiment(trial, writer, experimentValues,drawImage,restImage,drawBackGround)
     numOfBlock = 2
     numOfTrialsPerBlock = 1
     designValues = createDesignValues(conditionList * numOfTrialsPerBlock, numOfBlock)
