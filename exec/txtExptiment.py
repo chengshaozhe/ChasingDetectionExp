@@ -1,3 +1,4 @@
+from subprocess import Popen, PIPE
 import os
 import sys
 import collections as co
@@ -23,6 +24,14 @@ def crateVariableProduct(variableDict):
     productDictList=[{levelName:str(modelIndex.get_level_values(levelName)[modelIndexNumber]) \
             for levelName in levelNames} for modelIndexNumber in range(len(modelIndex))]
     return productDictList
+
+def txt()：
+	
+	resultsPath = '../PataData'
+	txtName=['a.txt']
+	txtPath=(os.path.join(resultsPath,'a.txt'))
+	proc=Popen(['NOTEPAD',txtPath])
+	proc.wait()
 class ScaleTrajectory:
     def __init__(self, positionIndex, rawXRange, rawYRange, scaledXRange, scaledYRange):
         self.xIndex, self.yIndex = positionIndex
@@ -186,5 +195,9 @@ def main():
     print("Result saved at {}".format(writerPath))
 
 
-if __name__ == '__main__':
-    main()
+
+if __name__ == "__main__":
+	main()
+
+
+
