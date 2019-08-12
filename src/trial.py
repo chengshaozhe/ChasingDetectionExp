@@ -49,7 +49,7 @@ class f():
 
 
 class ChaseTrial():
-    def __init__(self, displayFrames, drawState, drawImage, stimulus, checkHumanResponse, colorSpace, numOfAgent, drawFixationPoint, drawText, drawImageClick, clickWolfImage, clickSheepImage, fps, saveImage, saveImageFile):
+    def __init__(self, condtionList,displayFrames, drawState, drawImage, stimulus, checkHumanResponse, colorSpace, numOfAgent, drawFixationPoint, drawText, drawImageClick, clickWolfImage, clickSheepImage, fps, saveImage, saveImageFile):
         self.displayFrames = displayFrames
         self.stimulus = stimulus
         self.drawState = drawState
@@ -65,17 +65,20 @@ class ChaseTrial():
         self.fps = fps
         self.saveImage = saveImage
         self.saveImageFile = saveImageFile
+        self.conditionList=condtionList
 
     def __call__(self, condition):
         results = co.OrderedDict()
         results["trail"] = ''
-        results['condition'] = condition
+        results['condition'] = condition['ChaseConditon']
+        results['trajetoryIndex']=condition['TrajIndex']
         results['response'] = ''
         results['reactionTime'] = ''
         results['chosenWolfIndex'] = ''
         results['chosenSheepIndex'] = ''
+        print('1',condition,'2')
 
-        trajetoryData = self.stimulus[condition]
+        trajetoryData = self.stimulus[int(condition['ChaseConditon'])][int(condition['TrajIndex'])]
         random.shuffle(self.colorSpace)
         circleColorList = self.colorSpace[:self.numOfAgent]
 
@@ -83,7 +86,6 @@ class ChaseTrial():
         initialTime = time.get_ticks()
         fpsClock = pg.time.Clock()
         while pause:
-            print('pause',pause)
             pg.mouse.set_visible(False)
             self.drawFixationPoint()
             for t in range(self.displayFrames):
@@ -92,7 +94,7 @@ class ChaseTrial():
 
                 screen = self.drawState(state, circleColorList)
                 # screen = self.drawState(state, condition, circleColorList)
-
+                # screen = self.drawStateWithRope(state, condition, self.colorSpace)
                 if self.saveImage == True:
                     currentDir = os.getcwd()
                     parentDir = os.path.abspath(os.path.join(currentDir, os.pardir))

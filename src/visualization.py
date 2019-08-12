@@ -55,49 +55,88 @@ class DrawFixationPoint():
         pg.display.flip()
         pg.time.wait(1000)
         return
-
-
-class DrawState():
-    def __init__(self, drawBackGround, numOfAgent, screen, circleSize):
-        self.drawBackGround = drawBackGround
-        self.numOfAgent = numOfAgent
+class DrawState:
+    def __init__(self, screen, circleSize, numOfAgent, positionIndex, drawBackGround ):
         self.screen = screen
         self.circleSize = circleSize
+        self.numOfAgent = numOfAgent
+        self.xIndex, self.yIndex = positionIndex
+        self.drawBackGround = drawBackGround
 
     def __call__(self, state, circleColorList):
         self.drawBackGround()
-        for i in range(self.numOfAgent):
-            agentPos = state[i]
-            pg.draw.circle(self.screen, circleColorList[i], [np.int(
-                agentPos[0]), np.int(agentPos[1])], self.circleSize)
-
+        for agentIndex in range(self.numOfAgent):
+            agentPos = [np.int(state[agentIndex][self.xIndex]), np.int(state[agentIndex][self.yIndex])]
+            agentColor = circleColorList[agentIndex]
+            pg.draw.circle(self.screen, agentColor, agentPos, self.circleSize)
         pg.display.flip()
         pg.time.wait(10)
         return self.screen
 
+# class DrawState():
+#     def __init__(self, drawBackGround, numOfAgent, screen, circleSize):
+#         self.drawBackGround = drawBackGround
+#         self.numOfAgent = numOfAgent
+#         self.screen = screen
+#         self.circleSize = circleSize
+
+#     def __call__(self, state, circleColorList):
+#         self.drawBackGround()
+#         for i in range(self.numOfAgent):
+#             agentPos = state[i]
+#             pg.draw.circle(self.screen, circleColorList[i], [np.int(
+#                 agentPos[0]), np.int(agentPos[1])], self.circleSize)
+
+#         pg.display.flip()
+#         pg.time.wait(10)
+#         return self.screen
+
 
 class DrawStateWithRope():
-    def __init__(self, drawBackGround, numOfAgent, screen, circleSize, ropeColor):
-        self.drawBackGround = drawBackGround
-        self.numOfAgent = numOfAgent
+    def __init__(self, screen, circleSize, numOfAgent, positionIndex, ropeColor, drawBackGround):
         self.screen = screen
         self.circleSize = circleSize
+        self.numOfAgent = numOfAgent
+        self.xIndex, self.yIndex = positionIndex
         self.ropeColor = ropeColor
+        self.drawBackGround = drawBackGround
 
-    def __call__(self, state, condition, circleColorList):
+    def __call__(self, state, tiedAgentId, circleColorList):
         self.drawBackGround()
-        if condition == 1 or condition == 3:
-            pg.draw.lines(self.screen, self.ropeColor, False, [state[0], state[2]], 5)
-        if condition == 2 or condition == 4:
-            pg.draw.lines(self.screen, self.ropeColor, False, [state[0], state[3]], 5)
-        for i in range(self.numOfAgent):
-            agentPos = state[i]
-            pg.draw.circle(self.screen, circleColorList[i], [np.int(
-                agentPos[0]), np.int(agentPos[1])], self.circleSize)
-            pg.display.flip()
+        if tiedAgentId:
+            tiedAgentPos = [[np.int(state[agentId][self.xIndex]), np.int(state[agentId][self.yIndex])] for agentId in tiedAgentId]
+            pg.draw.lines(self.screen, self.ropeColor, False, tiedAgentPos, 3)
+
+        for agentIndex in range(self.numOfAgent):
+            agentPos = [np.int(state[agentIndex][self.xIndex]), np.int(state[agentIndex][self.yIndex])]
+            agentColor = circleColorList[agentIndex]
+            pg.draw.circle(self.screen, agentColor, agentPos, self.circleSize)
+        pg.display.flip()
         pg.time.wait(10)
 
         return self.screen
+# class DrawStateWithRope():
+#     def __init__(self, drawBackGround, numOfAgent, screen, circleSize, ropeColor):
+#         self.drawBackGround = drawBackGround
+#         self.numOfAgent = numOfAgent
+#         self.screen = screen
+#         self.circleSize = circleSize
+#         self.ropeColor = ropeColor
+
+#     def __call__(self, state, condition, circleColorList):
+#         self.drawBackGround()
+#         if condition == 1 or condition == 3:
+#             pg.draw.lines(self.screen, self.ropeColor, False, [state[0], state[2]], 5)
+#         if condition == 2 or condition == 4:
+#             pg.draw.lines(self.screen, self.ropeColor, False, [state[0], state[3]], 5)
+#         for i in range(self.numOfAgent):
+#             agentPos = state[i]
+#             pg.draw.circle(self.screen, circleColorList[i], [np.int(
+#                 agentPos[0]), np.int(agentPos[1])], self.circleSize)
+#             pg.display.flip()
+#         pg.time.wait(10)
+
+#         return self.screen
 
 
 class DrawImage():

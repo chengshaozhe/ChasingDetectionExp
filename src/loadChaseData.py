@@ -10,6 +10,29 @@ def adjustPostionDF(df, xPosIndex, yPosIndex, stimulusXBoundary, stimulusYBounda
     df[yPosIndex] = df[yPosIndex] * stimulusYBoundary[1] / dataSetBoundary[1] + stimulusYBoundary[0]
     adjustPostionDF = df
     return adjustPostionDF
+class AdjustDfFPStoTraj:
+    def __init__(self, oldFPS, newFPS):
+        self.oldFPS = oldFPS
+        self.newFPS = newFPS
+
+    def __call__(self, trajDf):
+        xValue = [value['xPos'] for key, value in trajDf.groupby('agentId')]
+        yValue = [value['yPos'] for key, value in trajDf.groupby('agentId')]
+
+        timeStepsNumber = len(xValue[0])
+        adjustRatio = self.newFPS // (self.oldFPS - 1)
+
+        insertPositionValue = lambda positionList: np.array(
+            [np.linspace(positionList[index], positionList[index + 1], adjustRatio, endpoint=False)
+             for index in range(timeStepsNumber - 1)]).flatten().tolist()
+        newXValue = [insertPositionValue(agentXPos) for agentXPos in xValue]
+        newYValue = [insertPositionValue(agentYPos) for agentYPos in yValue]
+
+        agentNumber = len(xValue)
+        newTimeStepsNumber = len(newXValue[0])
+        getSingleState = lambda time: [(newXValue[agentIndex][time], newYValue[agentIndex][time]) for agentIndex in range(agentNumber)]
+        newTraj = [getSingleState(time) for time in range(newTimeStepsNumber)]
+        return newTraj
 
 
 class GenerateTrajetoryData():
