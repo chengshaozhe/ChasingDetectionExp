@@ -12,7 +12,7 @@ import pandas as pd
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from src.design import createDesignValues, samplePosition
 from src.experiment import Experiment
-from src.trial import ChaseTrial, CheckHumanResponse
+from src.trial import ReportTrial,OpenReportTxt
 from src.visualization import InitializeScreen, DrawStateWithRope, DrawImage, DrawBackGround, DrawImageClick, DrawText, DrawFixationPoint, DrawStateWithRope,DrawState
 from src.pandasWriter import WriteDataFrameToCSV
 from src.loadChaseData import GenerateTrajetoryData
@@ -24,14 +24,6 @@ def crateVariableProduct(variableDict):
     productDictList=[{levelName:str(modelIndex.get_level_values(levelName)[modelIndexNumber]) \
             for levelName in levelNames} for modelIndexNumber in range(len(modelIndex))]
     return productDictList
-
-def txt()：
-	
-	resultsPath = '../PataData'
-	txtName=['a.txt']
-	txtPath=(os.path.join(resultsPath,'a.txt'))
-	proc=Popen(['NOTEPAD',txtPath])
-	proc.wait()
 class ScaleTrajectory:
     def __init__(self, positionIndex, rawXRange, rawYRange, scaledXRange, scaledYRange):
         self.xIndex, self.yIndex = positionIndex
@@ -104,9 +96,6 @@ def main():
     fullScreen = False  
     initializeScreen = InitializeScreen(screenWidth, screenHeight, fullScreen)
     screen = initializeScreen()
-
-    saveImage = False
-    saveImageFile = 'RopeCondition1'
  
     leaveEdgeSpace = 200
     circleSize = 10
@@ -146,6 +135,7 @@ def main():
     clickWolfImage = pygame.image.load(os.path.join(picturePath, 'clickwolf.png'))
     clickSheepImage = pygame.image.load(os.path.join(picturePath, 'clicksheep.png'))
     restImage = pygame.image.load(os.path.join(picturePath, 'rest.jpg'))
+    reportInstrucImage=pygame.image.load(os.path.join(picturePath, 'reportIntroduction.jpg'))
 
     drawImage = DrawImage(screen)
     drawText = DrawText(screen, fontSize, textColor)
@@ -173,12 +163,12 @@ def main():
     writerPath = os.path.join(resultsPath, experimentValues["name"]) + '.csv'
     writer = WriteDataFrameToCSV(writerPath)
 
+    txtPath=(os.path.join(resultsPath,experimentValues["name"]+'.txt'))
+    openReportTxt=OpenReportTxt(txtPath)
     displayFrames = 600
-    keysForCheck = {'f': 0, 'j': 1}
-    checkHumanResponse = CheckHumanResponse(keysForCheck)
-    trial = ChaseTrial(conditionList,displayFrames, drawState, drawImage, stimulus, checkHumanResponse, colorSpace, numOfAgent, drawFixationPoint, drawText, drawImageClick, clickWolfImage, clickSheepImage, FPS, saveImage, saveImageFile)
-    
-    experiment = Experiment(trial, writer, experimentValues,drawImage,restImage,drawBackGround)
+
+    trial =ReportTrial(conditionList,displayFrames, drawState, drawImage, stimulus, colorSpace, numOfAgent, drawFixationPoint, drawText,  FPS,reportInstrucImage,openReportTxt)
+    experiment = Experiment(trial, writer, experimentValues,drawImage,restImage,drawBackGround,hasRest=False)
     numOfBlock = 2
     numOfTrialsPerBlock = 1
     designValues = createDesignValues(exprimentVarableList * numOfTrialsPerBlock, numOfBlock)

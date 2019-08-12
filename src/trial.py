@@ -6,7 +6,16 @@ from pygame import time
 from pygame.color import THECOLORS
 import os
 import sys
+from subprocess import Popen, PIPE
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+class OpenReportTxt(object):
+    def __init__(self, txtPath):
 
+        self.txtPath=txtPath
+
+    def __call__(self):   
+        proc=Popen(['NOTEPAD',self.txtPath])
+        proc.wait()
 
 class CheckHumanResponse():
     def __init__(self, keysForCheck):
@@ -108,3 +117,51 @@ class ChaseTrial():
                 pg.time.wait(500)
 
         return results
+
+class ReportTrial():
+    def __init__(self, conditionList,displayFrames, drawState, drawImage, stimulus, colorSpace, numOfAgent, drawFixationPoint, drawText,  fps,reportInstrucImage,openReportTxt):
+        self.conditionList=conditionList
+        self.displayFrames = displayFrames
+        self.stimulus = stimulus
+        self.drawState = drawState
+        self.drawImage = drawImage
+        self.colorSpace = colorSpace
+        self.numOfAgent = numOfAgent
+        self.drawFixationPoint = drawFixationPoint
+        self.drawText = drawText   
+
+        self.fps = fps
+        self.reportInstrucImage=reportInstrucImage
+        self.openReportTxt=openReportTxt        
+    def __call__(self, condition):
+        results = co.OrderedDict()
+        results["trail"] = ''
+        results['condition'] = condition['ChaseConditon']
+        results['trajetoryIndex']=condition['TrajIndex']
+        trajetoryData = self.stimulus[int(condition['ChaseConditon'])][int(condition['TrajIndex'])]
+        random.shuffle(self.colorSpace)
+        circleColorList = self.colorSpace[:self.numOfAgent]
+
+        pause = True
+        initialTime = time.get_ticks()
+        fpsClock = pg.time.Clock()
+        pg.mouse.set_visible(False)
+        self.drawFixationPoint()
+        for t in range(self.displayFrames):
+            state = trajetoryData[t]
+            fpsClock.tick(self.fps)
+
+            screen = self.drawState(state, circleColorList)
+            # screen = self.drawState(state, condition, circleColorList)
+            # screen = self.drawStateWithRope(state, condition, self.colorSpace)
+
+        self.drawImage(self.reportInstrucImage)
+        self.openReportTxt()
+        self.drawImage(self.reportInstrucImage)
+        return results
+
+if __name__ == "__main__":
+    resultsPath = os.path.join(os.path.abspath(os.path.join(os.getcwd(), os.pardir)), 'results')
+    txtPath=(os.path.join(resultsPath,'k'+'.txt'))
+    openReportTxt=OpenReportTxt(txtPath)
+    openReportTxt()
