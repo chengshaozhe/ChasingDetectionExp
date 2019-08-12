@@ -5,6 +5,7 @@ import pygame as pg
 from pygame import time
 from pygame.color import THECOLORS
 import os
+import sys
 
 
 class CheckHumanResponse():
@@ -31,21 +32,6 @@ class CheckHumanResponse():
 
         pg.display.update()
         return results, pause
-
-
-class f():
-    def __init__(self, allowedKey):
-        self.allowedKey = allowedKeyList
-
-    def __call__(self):
-        pause = True
-        pg.event.set_allowed(allowedKeyList)
-        while pause:
-            for event in pg.event.get():
-                if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
-                    pause = False
-                elif event.type == pg.QUIT:
-                    pg.quit()
 
 
 class ChaseTrial():

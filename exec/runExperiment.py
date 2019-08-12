@@ -72,10 +72,6 @@ class AdjustDfFPStoTraj:
 
 def main():
     numOfAgent = 4
-    sheepId = 0
-    wolfId = 1
-    masterId = 2
-    distractorId = 3
 
     manipulatedHyperVariables = co.OrderedDict()
     conditionList = [1]
@@ -106,14 +102,12 @@ def main():
     fontSize = 50
     xBoundary = [leaveEdgeSpace, screenWidth - leaveEdgeSpace * 2]
     yBoundary = [leaveEdgeSpace, screenHeight - leaveEdgeSpace * 2]
-    stimulusXBoundary = [xBoundary[0] + circleSize, xBoundary[1] - circleSize]
-    stimulusYBoundary = [yBoundary[0] + circleSize, yBoundary[1] - circleSize]
 
     screenColor = THECOLORS['black']
     lineColor = THECOLORS['white']
     textColor = THECOLORS['white']
     fixationPointColor = THECOLORS['white']
-    ropeColor = THECOLORS['white']
+
     colorSpace = [THECOLORS['grey'], THECOLORS['red'], THECOLORS['blue'], THECOLORS['yellow'], THECOLORS['purple'], THECOLORS['orange']]
     random.shuffle(colorSpace)
     # circleColorList = [THECOLORS['grey']] * numOfAgent
