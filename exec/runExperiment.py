@@ -55,14 +55,15 @@ def main():
     picturePath = os.path.join(os.path.abspath(os.path.join(os.getcwd(), os.pardir)), 'pictures')
     resultsPath = os.path.join(os.path.abspath(os.path.join(os.getcwd(), os.pardir)), 'results')
 
-    introductionImage = pygame.image.load(os.path.join(picturePath, 'introduction.png'))
-    restImage = pygame.image.load(os.path.join(picturePath, 'rest.png'))
+
+    introductionImage = pygame.image.load(os.path.join(picturePath, 'introduction2.png'))
     finishImage = pygame.image.load(os.path.join(picturePath, 'over.jpg'))
     introductionImage = pygame.transform.scale(introductionImage, (screenWidth, screenHeight))
-    restImage = pygame.transform.scale(restImage, (screenWidth, screenHeight))
     finishImage = pygame.transform.scale(finishImage, (int(screenWidth * 2 / 3), int(screenHeight / 4)))
     clickWolfImage = pygame.image.load(os.path.join(picturePath, 'clickwolf.png'))
     clickSheepImage = pygame.image.load(os.path.join(picturePath, 'clicksheep.png'))
+    restImage = pygame.image.load(os.path.join(picturePath, 'rest.jpg'))
+    # restImage = pygame.transform.scale(restImage, (screenWidth, screenHeight))
 
     drawImage = DrawImage(screen)
     drawText = DrawText(screen, fontSize, textColor)
@@ -72,8 +73,8 @@ def main():
     drawState = DrawState(drawBackGround, numOfAgent, screen, circleSize)
     drawStateWithRope = DrawStateWithRope(drawBackGround, numOfAgent, screen, circleSize, ropeColor)
 
-    conditionList = [1, 2, 3, 4]
-    trajetoryIndexList = [1, 2, 3, 4, 5]
+    conditionList = [1]#[1, 2, 3, 4]
+    trajetoryIndexList =[1]# [1, 2, 3, 4, 5]
     dataFileDir = '../PataData'
     dataSetBoundary = [26, 26]
     generateTrajetoryData = GenerateTrajetoryData(dataFileDir, stimulusXBoundary, stimulusYBoundary, dataSetBoundary)
@@ -91,15 +92,14 @@ def main():
     keysForCheck = {'f': 0, 'j': 1}
     checkHumanResponse = CheckHumanResponse(keysForCheck)
     trial = ChaseTrial(displayFrames, drawState, drawImage, stimulus, checkHumanResponse, colorSpace, numOfAgent, drawFixationPoint, drawText, drawImageClick, clickWolfImage, clickSheepImage, FPS, saveImage, saveImageFile)
-    experiment = Experiment(trial, writer, experimentValues)
 
-    numOfBlock = 1
-    numOfConditionLoopsPerBlock = 2
-    designValues = createDesignValues(conditionList * numOfConditionLoopsPerBlock, numOfBlock)
-    numOfTrials = len(designValues)
-
-    # drawImage(introductionImage)
-    experiment(designValues)
+    experiment = Experiment(trial, writer, experimentValues,drawImage,restImage)
+    numOfBlock = 2
+    numOfTrialsPerBlock = 1
+    designValues = createDesignValues(conditionList * numOfTrialsPerBlock, numOfBlock)
+    print(designValues)
+    drawImage(introductionImage)
+    experiment(designValues,numOfTrialsPerBlock)
     # drawImage(finishImage)
     print("Result saved at {}".format(writerPath))
 
