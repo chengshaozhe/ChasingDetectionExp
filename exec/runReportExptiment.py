@@ -78,17 +78,18 @@ def main():
     masterId = 2
     distractorId = 3
 
+    experimentValues = co.OrderedDict()
+    experimentValues["condition"] = input("Please enter your condition 1 or 2:").capitalize()
+    experimentValues["name"] = input("Please enter your name:").capitalize()
+    #experimentValues["name"] = 'test'
+
     manipulatedHyperVariables = co.OrderedDict()
-    conditionList = [1]
+    conditionList = [int(experimentValues["condition"])]
     manipulatedHyperVariables['ChaseConditon']=conditionList
-    trajetoryIndexList =[0,1]
+    trajetoryIndexList =[0]
     manipulatedHyperVariables['TrajIndex'] =  trajetoryIndexList
 
     exprimentVarableList=crateVariableProduct(manipulatedHyperVariables)
-
-    experimentValues = co.OrderedDict()
-    # experimentValues["name"] = input("Please enter your name:").capitalize()
-    experimentValues["name"] = 'test'
 
     screenWidth = 800
     screenHeight = 800
@@ -112,31 +113,23 @@ def main():
     textColor = THECOLORS['white']
     fixationPointColor = THECOLORS['white']
     ropeColor = THECOLORS['white']
-    colorSpace = [THECOLORS['grey'], THECOLORS['red'], THECOLORS['blue'], THECOLORS['yellow'], THECOLORS['purple'], THECOLORS['orange']]
-    random.shuffle(colorSpace)
+    # colorSpace = [THECOLORS['grey'], THECOLORS['red'], THECOLORS['blue'], THECOLORS['yellow'], THECOLORS['purple'], THECOLORS['orange']]
+    # random.shuffle(colorSpace)
+    colorSpace=[THECOLORS['purple'],THECOLORS['orange'],THECOLORS['red'], THECOLORS['blue']] # sheep wolf master distractor
     # circleColorList = [THECOLORS['grey']] * numOfAgent
     # circleColorList = [THECOLORS['red'], THECOLORS['green'], THECOLORS['grey'], THECOLORS['yellow']]
     circleColorList = colorSpace[:numOfAgent]
 
-    stateIndex = ['wolf', 'sheep', 'master', 'distractor']
-    identityColorPairs = dict(zip(stateIndex, circleColorList))
-
     picturePath = os.path.join(os.path.abspath(os.path.join(os.getcwd(), os.pardir)), 'pictures')
     resultsPath = os.path.join(os.path.abspath(os.path.join(os.getcwd(), os.pardir)), 'results')
 
-    introductionImage1 = pygame.image.load(os.path.join(picturePath, 'introduction1.png'))
-    introductionImage2 = pygame.image.load(os.path.join(picturePath, 'introduction2.png'))
+    introductionImage1 = pygame.image.load(os.path.join(picturePath, 'report1.png'))
     finishImage = pygame.image.load(os.path.join(picturePath, 'over.jpg'))
-    introductionImage1 = pygame.transform.scale(introductionImage1, (screenWidth, screenHeight))
-    introductionImage2 = pygame.transform.scale(introductionImage2, (screenWidth, screenHeight))
-
-
+    introductionImage1 = pygame.transform.scale(introductionImage1, (int(screenWidth*3/4), int(screenHeight/4)))
     finishImage = pygame.transform.scale(finishImage, (int(screenWidth * 2 / 3), int(screenHeight / 4)))
-    clickWolfImage = pygame.image.load(os.path.join(picturePath, 'clickwolf.png'))
-    clickSheepImage = pygame.image.load(os.path.join(picturePath, 'clicksheep.png'))
     restImage = pygame.image.load(os.path.join(picturePath, 'rest.jpg'))
-    reportInstrucImage=pygame.image.load(os.path.join(picturePath, 'reportIntroduction.jpg'))
-
+    reportInstrucImage=pygame.image.load(os.path.join(picturePath, 'report2.png'))
+    reportInstrucImage  = pygame.transform.scale(reportInstrucImage, (int(screenWidth*1.4*3/5), int(screenHeight*1.7*2/5)))
     drawImage = DrawImage(screen)
     drawText = DrawText(screen, fontSize, textColor)
     drawBackGround = DrawBackGround(screen, screenColor, xBoundary, yBoundary, lineColor, lineWidth)
@@ -160,29 +153,29 @@ def main():
     trajectoryDf = lambda condition,index: pd.read_pickle(os.path.join(dataFileDir, 'condition={}'.format(condition)+'sampleIndex={}.pickle'.format(index)))
     stimulus = {condition:[getTrajectory(trajectoryDf(condition,index)) for index in trajetoryIndexList] for condition in conditionList}
 
-    writerPath = os.path.join(resultsPath, experimentValues["name"]) + '.csv'
+    writerPath = os.path.join(resultsPath, experimentValues["name"]) + experimentValues["condition"]+'.csv'
     writer = WriteDataFrameToCSV(writerPath)
 
-    txtPath=(os.path.join(resultsPath,experimentValues["name"]+'.txt'))
+    txtPath=(os.path.join(resultsPath,experimentValues["condition"]+'-'+experimentValues["name"]+'.txt'))
     openReportTxt=OpenReportTxt(txtPath)
     displayFrames = 600
 
     trial =ReportTrial(conditionList,displayFrames, drawState, drawImage, stimulus, colorSpace, numOfAgent, drawFixationPoint, drawText,  FPS,reportInstrucImage,openReportTxt)
     experiment = Experiment(trial, writer, experimentValues,drawImage,restImage,drawBackGround,hasRest=False)
-    numOfBlock = 2
+    numOfBlock = 1
     numOfTrialsPerBlock = 1
     designValues = createDesignValues(exprimentVarableList * numOfTrialsPerBlock, numOfBlock)
     
+    restDuration=3
+    drawImage(introductionImage1) 
 
-    drawImage(introductionImage1)
-    drawImage(introductionImage2)
     
-    experiment(designValues,len(exprimentVarableList * numOfTrialsPerBlock))
-    # self.darwBackground()
+    experiment(designValues,restDuration)
+    drawBackGround()
     drawImage(finishImage)
 
 
-    print("Result saved at {}".format(writerPath))
+    print("Result saved at {}".format(txtPath))
 
 
 

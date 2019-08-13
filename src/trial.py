@@ -10,9 +10,10 @@ from subprocess import Popen, PIPE
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 class OpenReportTxt(object):
     def __init__(self, txtPath):
-
         self.txtPath=txtPath
-
+        if  not os.path.exists(txtPath):
+            txt=open(txtPath,'w')
+            txt.close()            
     def __call__(self):   
         proc=Popen(['NOTEPAD',self.txtPath])
         proc.wait()

@@ -11,11 +11,9 @@ class Experiment():
     def __call__(self, designValues,restDuration):
         for trialIndex in range(len(designValues)):          
             condition = designValues[trialIndex]
-            print(condition)
             results = self.trial(condition)
             results["trail"] = trialIndex + 1
             results["condition"] = condition
-            print(results)
             response = self.experimentValues.copy()
             response.update(results)
             self.writer(response, trialIndex)
