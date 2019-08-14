@@ -130,7 +130,6 @@ class ReportTrial():
         self.numOfAgent = numOfAgent
         self.drawFixationPoint = drawFixationPoint
         self.drawText = drawText   
-
         self.fps = fps
         self.reportInstrucImage=reportInstrucImage
         self.openReportTxt=openReportTxt        
@@ -157,8 +156,9 @@ class ReportTrial():
             # screen = self.drawStateWithRope(state, condition, self.colorSpace)
 
         self.drawImage(self.reportInstrucImage)
+        pg.quit()
         self.openReportTxt()
-        self.drawImage(self.reportInstrucImage)
+        # self.drawImage(self.reportInstrucImage)
         return results
 
 if __name__ == "__main__":

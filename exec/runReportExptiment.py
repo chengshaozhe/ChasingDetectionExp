@@ -94,7 +94,7 @@ def main():
     screenWidth = 800
     screenHeight = 800
     FPS = 60
-    fullScreen = False  
+    fullScreen = True  
     initializeScreen = InitializeScreen(screenWidth, screenHeight, fullScreen)
     screen = initializeScreen()
  
@@ -171,8 +171,8 @@ def main():
 
     
     experiment(designValues,restDuration)
-    drawBackGround()
-    drawImage(finishImage)
+    # drawBackGround()
+    # drawImage(finishImage)
 
 
     print("Result saved at {}".format(txtPath))
