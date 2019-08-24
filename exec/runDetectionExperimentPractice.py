@@ -128,7 +128,9 @@ def main():
     lineColor = THECOLORS['white']
     textColor = THECOLORS['white']
     fixationPointColor = THECOLORS['white']
+
     colorSpace=[(203,164,4,255),(49,153,0,255),(255,90,16,255),(251,7,255,255),(9,204,172,255),(3,28,255,255)]
+
     # colorSpace = [THECOLORS['grey'], THECOLORS['red'], THECOLORS['blue'], THECOLORS['yellow'], THECOLORS['purple'], THECOLORS['orange']]
 
     picturePath = os.path.join(os.path.abspath(os.path.join(os.getcwd(), os.pardir)), 'pictures')
