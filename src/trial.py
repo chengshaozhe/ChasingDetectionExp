@@ -66,7 +66,7 @@ class ChaseTrial():
     def __call__(self, condition):
         results = co.OrderedDict()
         results["trail"] = ''
-        results['condition'] = condition['ChaseConditon']
+        results['condition'] = condition['ChaseCondition']
         results['trajetoryIndex']=condition['TrajIndex']
         results['response'] = ''
         results['reactionTime'] = ''
@@ -74,7 +74,7 @@ class ChaseTrial():
         results['chosenSheepIndex'] = ''
         print('1',condition,'2')
 
-        trajetoryData = self.stimulus[int(condition['ChaseConditon'])][int(condition['TrajIndex'])]
+        trajetoryData = self.stimulus[int(condition['ChaseCondition'])][int(condition['TrajIndex'])]
         random.shuffle(self.colorSpace)
         circleColorList = self.colorSpace[:self.numOfAgent]
 

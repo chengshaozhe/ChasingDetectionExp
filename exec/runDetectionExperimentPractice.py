@@ -74,7 +74,7 @@ def main():
     numOfAgent = 4
 
     manipulatedHyperVariables = co.OrderedDict()
-    conditionList = [1,2] #0；practice 1：off=0 2：off=12
+    conditionList = [0] #0；practice 1：off=0 2：off=12
     manipulatedHyperVariables['ChaseCondition']=conditionList
     trajetoryIndexList =range(2)
     manipulatedHyperVariables['TrajIndex'] =  trajetoryIndexList
@@ -104,8 +104,9 @@ def main():
 
     experimentValues = co.OrderedDict()
     # experimentValues["name"] = input("Please enter your name:").capitalize()
-    experimentValues["name"] = 'test'
     
+    experimentValues["name"] = 'practice'
+    print(experimentValues["name"])
     screenWidth = 800
     screenHeight = 800
 
@@ -173,8 +174,8 @@ def main():
     trial = ChaseTrial(conditionList,displayFrames, drawState, drawImage, stimulus, checkHumanResponse, colorSpace, numOfAgent, drawFixationPoint, drawText, drawImageClick, clickWolfImage, clickSheepImage, FPS, saveImage, saveImageFile)
     
     experiment = Experiment(trial, writer, experimentValues,drawImage,restImage,drawBackGround)
-    numOfBlock = 1
-    numOfTrialsPerBlock = 1
+    numOfBlock = 4
+    numOfTrialsPerBlock = 2
     designValues = createDesignValues(exprimentVarableList * numOfTrialsPerBlock, numOfBlock)
     restDuration=20
 
