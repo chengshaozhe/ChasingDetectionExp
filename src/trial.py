@@ -45,7 +45,7 @@ class CheckHumanResponse():
 
 
 class ChaseTrial():
-    def __init__(self, condtionList,displayFrames, drawState, drawImage, stimulus, checkHumanResponse, colorSpace, numOfAgent, drawFixationPoint, drawText, drawImageClick, clickWolfImage, clickSheepImage, fps, saveImage, saveImageFile):
+    def __init__(self, condtionList,displayFrames, drawState, drawImage, stimulus, checkHumanResponse, colorSpace, numOfAgent, drawFixationPoint, drawText, drawImageClick, clickWolfImage, clickSheepImage, fps):
         self.displayFrames = displayFrames
         self.stimulus = stimulus
         self.drawState = drawState
@@ -59,8 +59,7 @@ class ChaseTrial():
         self.clickWolfImage = clickWolfImage
         self.clickSheepImage = clickSheepImage
         self.fps = fps
-        self.saveImage = saveImage
-        self.saveImageFile = saveImageFile
+
         self.conditionList=condtionList
 
     def __call__(self, condition):
@@ -72,7 +71,7 @@ class ChaseTrial():
         results['reactionTime'] = ''
         results['chosenWolfIndex'] = ''
         results['chosenSheepIndex'] = ''
-        print('1',condition,'2')
+        
 
         trajetoryData = self.stimulus[int(condition['ChaseCondition'])][int(condition['TrajIndex'])]
         random.shuffle(self.colorSpace)
@@ -91,13 +90,6 @@ class ChaseTrial():
                 screen = self.drawState(state, circleColorList)
                 # screen = self.drawState(state, condition, circleColorList)
                 # screen = self.drawStateWithRope(state, condition, self.colorSpace)
-                if self.saveImage == True:
-                    currentDir = os.getcwd()
-                    parentDir = os.path.abspath(os.path.join(currentDir, os.pardir))
-                    saveImageDir = os.path.join(os.path.join(parentDir, 'data'), self.saveImageFile)
-                    if not os.path.exists(saveImageDir):
-                        os.makedirs(saveImageDir)
-                    pg.image.save(screen, saveImageDir + '/' + format(t, '04') + ".png")
 
                 results, pause = self.checkHumanResponse(initialTime, results, pause, circleColorList)
                 if not pause:

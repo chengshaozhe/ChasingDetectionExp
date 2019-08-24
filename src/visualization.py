@@ -53,7 +53,7 @@ class DrawFixationPoint():
         self.drawBackGround()
         pg.draw.circle(self.screen, self.fixationPointColor, self.screenCenter, 5)
         pg.display.flip()
-        pg.time.wait(1000)
+        pg.time.wait(2000)
         return
 class DrawState:
     def __init__(self, screen, circleSize, numOfAgent, positionIndex, drawBackGround ):

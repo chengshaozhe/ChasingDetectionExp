@@ -76,7 +76,7 @@ def main():
     manipulatedHyperVariables = co.OrderedDict()
     conditionList = [0] #0；practice 1：off=0 2：off=12
     manipulatedHyperVariables['ChaseCondition']=conditionList
-    trajetoryIndexList =range(2)
+    trajetoryIndexList =[0]
     manipulatedHyperVariables['TrajIndex'] =  trajetoryIndexList
 
     exprimentVarableList=crateVariableProduct(manipulatedHyperVariables)
@@ -110,12 +110,11 @@ def main():
     screenWidth = 800
     screenHeight = 800
 
-    fullScreen = False  
+    fullScreen = True  
     initializeScreen = InitializeScreen(screenWidth, screenHeight, fullScreen)
     screen = initializeScreen()
  
-    saveImage = False
-    saveImageFile = 'RopeCondition1'
+
 
     leaveEdgeSpace = 200
     circleSize = 10
@@ -129,15 +128,8 @@ def main():
     lineColor = THECOLORS['white']
     textColor = THECOLORS['white']
     fixationPointColor = THECOLORS['white']
-
-    colorSpace = [THECOLORS['grey'], THECOLORS['red'], THECOLORS['blue'], THECOLORS['yellow'], THECOLORS['purple'], THECOLORS['orange']]
-    random.shuffle(colorSpace)
-    # circleColorList = [THECOLORS['grey']] * numOfAgent
-    # circleColorList = [THECOLORS['red'], THECOLORS['green'], THECOLORS['grey'], THECOLORS['yellow']]
-    circleColorList = colorSpace[:numOfAgent]
-
-    stateIndex = ['wolf', 'sheep', 'master', 'distractor']
-    identityColorPairs = dict(zip(stateIndex, circleColorList))
+    colorSpace=[(203,164,4,255),(49,153,0,255),(255,90,16,255),(251,7,255,255),(9,204,172,255),(3,28,255,255)]
+    # colorSpace = [THECOLORS['grey'], THECOLORS['red'], THECOLORS['blue'], THECOLORS['yellow'], THECOLORS['purple'], THECOLORS['orange']]
 
     picturePath = os.path.join(os.path.abspath(os.path.join(os.getcwd(), os.pardir)), 'pictures')
     resultsPath = os.path.join(os.path.abspath(os.path.join(os.getcwd(), os.pardir)), 'results')
@@ -171,7 +163,7 @@ def main():
     displayFrames = 600
     keysForCheck = {'f': 0, 'j': 1}
     checkHumanResponse = CheckHumanResponse(keysForCheck)
-    trial = ChaseTrial(conditionList,displayFrames, drawState, drawImage, stimulus, checkHumanResponse, colorSpace, numOfAgent, drawFixationPoint, drawText, drawImageClick, clickWolfImage, clickSheepImage, FPS, saveImage, saveImageFile)
+    trial = ChaseTrial(conditionList,displayFrames, drawState, drawImage, stimulus, checkHumanResponse, colorSpace, numOfAgent, drawFixationPoint, drawText, drawImageClick, clickWolfImage, clickSheepImage, FPS)
     
     experiment = Experiment(trial, writer, experimentValues,drawImage,restImage,drawBackGround)
     numOfBlock = 4
