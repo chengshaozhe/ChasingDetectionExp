@@ -12,7 +12,7 @@ class Experiment():
         for trialIndex in range(len(designValues)):          
             condition = designValues[trialIndex]
             results = self.trial(condition)
-            print(results)
+
             results["trail"] = trialIndex + 1                      
             response = self.experimentValues.copy()
             response.update(results)
