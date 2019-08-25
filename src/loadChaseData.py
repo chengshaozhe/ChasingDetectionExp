@@ -3,13 +3,36 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 import random
-
+import numpy as np
 
 def adjustPostionDF(df, xPosIndex, yPosIndex, stimulusXBoundary, stimulusYBoundary, dataSetBoundary):
     df[xPosIndex] = df[xPosIndex] * stimulusXBoundary[1] / dataSetBoundary[0] + stimulusXBoundary[0]
     df[yPosIndex] = df[yPosIndex] * stimulusYBoundary[1] / dataSetBoundary[1] + stimulusYBoundary[0]
     adjustPostionDF = df
     return adjustPostionDF
+class ScaleTrajectory:
+    def __init__(self, positionIndex, rawXRange, rawYRange, scaledXRange, scaledYRange):
+        self.xIndex, self.yIndex = positionIndex
+        self.rawXMin, self.rawXMax = rawXRange
+        self.rawYMin, self.rawYMax = rawYRange
+
+        self.scaledXMin, self.scaledXMax = scaledXRange
+        self.scaledYMin, self.scaledYMax = scaledYRange
+
+    def __call__(self, originalTraj):
+        xScale = (self.scaledXMax - self.scaledXMin) / (self.rawXMax - self.rawXMin)
+        yScale = (self.scaledYMax - self.scaledYMin) / (self.rawYMax - self.rawYMin)
+
+        adjustX = lambda rawX: (rawX - self.rawXMin) * xScale + self.scaledXMin
+        adjustY = lambda rawY: (rawY - self.rawYMin) * yScale + self.scaledYMin
+
+        adjustPair = lambda pair: [adjustX(pair[0]), adjustY(pair[1])]
+        agentCount = len(originalTraj[0])
+
+        adjustState = lambda state: [adjustPair(state[agentIndex]) for agentIndex in range(agentCount)]
+        trajectory = [adjustState(state) for state in originalTraj]
+
+        return trajectory
 class AdjustDfFPStoTraj:
     def __init__(self, oldFPS, newFPS):
         self.oldFPS = oldFPS
@@ -33,6 +56,8 @@ class AdjustDfFPStoTraj:
         getSingleState = lambda time: [(newXValue[agentIndex][time], newYValue[agentIndex][time]) for agentIndex in range(agentNumber)]
         newTraj = [getSingleState(time) for time in range(newTimeStepsNumber)]
         return newTraj
+
+
 
 
 class GenerateTrajetoryData():
