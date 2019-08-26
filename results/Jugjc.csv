@@ -1,0 +1,5 @@
+,name,trail,condition,trajetoryIndex,response,reactionTime,chosenWolfIndex,chosenSheepIndex
+0,Jugjc,1,3,0,0,18535,,
+1,Jugjc,2,2,0,0,13651,,
+2,Jugjc,3,4,0,1,13588,0,1
+3,Jugjc,4,1,0,1,21904,1,0

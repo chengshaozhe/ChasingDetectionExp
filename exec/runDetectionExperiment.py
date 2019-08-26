@@ -86,7 +86,7 @@ def main():
 
     positionIndex = [0, 1]
     FPS = 60
-    dataFileDir = '../PataData'
+    dataFileDir = '../PataData/withoutLine'
     rawXRange = [-10, 10]
     rawYRange = [-10, 10]
     scaledXRange = [200, 600]

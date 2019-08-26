@@ -25,19 +25,19 @@ def main():
     distractorId=3
 
     manipulatedHyperVariables = co.OrderedDict()
-    conditionList = [3,4] #-1:practice with rope; 0；practice  with out rope 
-                        #1：off=0 without rope; 2：off=12without rope 
-                        #3：with rope between wolf& master; 4：with rope wolf % distractor
+    conditionList = [1,2,3,4]  
+                        #1：Chasing Present Master-Wolf Line; 2：Absent Master-Wolf Line 
+                        #3：Chasing Present Master-Distractor Line; 4：Absent Master-Distractor Line 
     manipulatedHyperVariables['ChaseCondition']=conditionList
     trajetoryIndexList =[-1]
     manipulatedHyperVariables['TrajIndex'] =  trajetoryIndexList
     
-    conditionValues = {3:[wolfId, masterId],4:[masterId, distractorId]}
+    conditionValues = {1:[wolfId, masterId],2:[wolfId, masterId],3:[distractorId, masterId],4:[distractorId, masterId]}
     
     print('loading')
     positionIndex = [0, 1]
     FPS = 60
-    dataFileDir = '../PataData'
+    dataFileDir = '../PataData/withLine'
     rawXRange = [-10, 10]
     rawYRange = [-10, 10]
     scaledXRange = [200, 600]
@@ -51,8 +51,8 @@ def main():
     print('loding success')
 
     experimentValues = co.OrderedDict()
-    experimentValues["name"] = input("Please enter your name:").capitalize()
-    # experimentValues["name"]='test'    
+    # experimentValues["name"] = input("Please enter your name:").capitalize()
+    experimentValues["name"]='Practice'    
     screenWidth = 800
     screenHeight = 800
 
@@ -78,7 +78,7 @@ def main():
     picturePath = os.path.join(os.path.abspath(os.path.join(os.getcwd(), os.pardir)), 'pictures')
     resultsPath = os.path.join(os.path.abspath(os.path.join(os.getcwd(), os.pardir)), 'results')
 
-    introductionImage1 = pygame.image.load(os.path.join(picturePath, 'introduction1.png'))
+    introductionImage1 = pygame.image.load(os.path.join(picturePath, 'withLineIntroduction1.png'))
     introductionImage2 = pygame.image.load(os.path.join(picturePath, 'introduction2.png'))
     finishImage = pygame.image.load(os.path.join(picturePath, 'over.jpg'))
     introductionImage1 = pygame.transform.scale(introductionImage1, (screenWidth, screenHeight))
