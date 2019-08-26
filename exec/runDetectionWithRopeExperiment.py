@@ -37,7 +37,7 @@ def main():
     print('loading')
     positionIndex = [0, 1]
     FPS = 60
-    dataFileDir = '../PataData/withLine'
+    dataFileDir ='../PataData/withLineRescale'
     rawXRange = [-10, 10]
     rawYRange = [-10, 10]
     scaledXRange = [200, 600]
@@ -45,9 +45,12 @@ def main():
     scaleTrajectory = ScaleTrajectory(positionIndex, rawXRange, rawYRange, scaledXRange, scaledYRange)
     oldFPS = 5
     adjustFPS = AdjustDfFPStoTraj(oldFPS, FPS)
-    getTrajectory = lambda trajectoryDf: scaleTrajectory(adjustFPS(trajectoryDf))
-    trajectoryDf = lambda condition,index: pd.read_pickle(os.path.join(dataFileDir, '{}'.format(condition)+' ({}).pickle'.format(index)))
-    stimulus = {condition:[getTrajectory(trajectoryDf(condition,index)) for index in trajetoryIndexList] for condition in conditionList}
+    # getTrajectory = lambda trajectoryDf: scaleTrajectory(adjustFPS(trajectoryDf))
+    # trajectoryDf = lambda condition,index: pd.read_pickle(os.path.join(dataFileDir, '{}'.format(condition)+' ({}).pickle'.format(index)))
+    # stimulus = {condition:[getTrajectory(trajectoryDf(condition,index)) for index in trajetoryIndexList] for condition in conditionList}
+    trajectoryDf = lambda condition,index: pd.read_pickle(os.path.join(dataFileDir,'condition={}'.format(condition)+'_Index=({}).pickle'.format(index)))
+    stimulus = {condition:{index:trajectoryDf(condition,index) for index in trajetoryIndexList} for condition in conditionList}
+
     print('loding success')
 
     experimentValues = co.OrderedDict()
@@ -104,7 +107,7 @@ def main():
     writerPath = os.path.join(resultsPath, experimentValues["name"]) + '.csv'
     writer = WriteDataFrameToCSV(writerPath)
 
-    displayFrames = 600
+    displayFrames =  FPS*20
     keysForCheck = {'f': 0, 'j': 1}
     checkHumanResponse = CheckHumanResponse(keysForCheck)
     #trial = ChaseTrial(conditionList,displayFrames, drawState, drawImage, stimulus, checkHumanResponse, colorSpace, numOfAgent, drawFixationPoint, drawText, drawImageClick, clickWolfImage, clickSheepImage, FPS)
