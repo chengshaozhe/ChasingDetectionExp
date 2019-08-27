@@ -1,0 +1,1 @@
+ffmpeg -f image2 -r 60 -i %04d.png -vcodec mpeg4 demo/demo2.mp4
