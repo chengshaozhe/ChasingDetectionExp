@@ -112,7 +112,7 @@ class ChaseTrial():
         return results
 
 class ChaseTrialWithRope():
-    def __init__(self, conditionValues,displayFrames, drawStateWithRope, drawImage, stimulus, checkHumanResponse, colorSpace, numOfAgent, drawFixationPoint, drawText, drawImageClick, clickWolfImage, clickSheepImage, fps):
+    def __init__(self, conditionValues,displayFrames, drawStateWithRope, drawImage, stimulus, checkHumanResponse, colorSpace, numOfAgent, drawFixationPoint, drawText, drawImageClick, clickWolfImage, clickSheepImage, fps,chasingJugeGroundTruth=None,chasingIndexGroundTruth=None,isFeedback=False,darwFeedBack=None):
         self.displayFrames = displayFrames
         self.stimulus = stimulus
         self.drawStateWithRope = drawStateWithRope
@@ -126,9 +126,11 @@ class ChaseTrialWithRope():
         self.clickWolfImage = clickWolfImage
         self.clickSheepImage = clickSheepImage
         self.fps = fps
-
         self.conditionValues=conditionValues
-
+        self.isFeedback=isFeedback
+        self.darwFeedBack=darwFeedBack
+        self.chasingJugeGroundTruth=chasingJugeGroundTruth
+        self.chasingIndexGroundTruth=chasingIndexGroundTruth
     def __call__(self, condition):
         results = co.OrderedDict()
         results["trail"] = ''
@@ -166,14 +168,25 @@ class ChaseTrialWithRope():
                     self.drawText('Please Response Now!', (screen.get_width() / 4, screen.get_height() / 1.2))
                     while pause:
                         results, pause = self.checkHumanResponse(initialTime, results, pause, circleColorList)
-               
-
-            if results['response'] == 1:
+            jumpSearch=False
+            if self.isFeedback:
+                if results['response']!=self.chasingJugeGroundTruth[int(condition['ChaseCondition'])]:
+                    self.darwFeedBack[0]()
+                    jumpSearch=True
+                elif results['response'] == 0:           
+                    self.darwFeedBack[1]()    
+            if results['response'] == 1 and (not jumpSearch) :
                 pg.mouse.set_visible(True)
                 chosenWolfIndex = self.drawImageClick(self.clickWolfImage, "W", circleColorList)
                 chosenSheepIndex = self.drawImageClick(self.clickSheepImage, 'S', circleColorList)
+
                 results['chosenWolfIndex'] = chosenWolfIndex
                 results['chosenSheepIndex'] = chosenSheepIndex
+                if self.isFeedback:
+                    if (chosenSheepIndex!=self.chasingIndexGroundTruth[0]) or (chosenWolfIndex!=self.chasingIndexGroundTruth[1]):
+                        self.darwFeedBack[0]()
+                    else:           
+                        self.darwFeedBack[1]() 
                 pg.time.wait(500)
 
         return results

@@ -12,7 +12,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from src.design import createDesignValues, samplePosition,crateVariableProduct
 from src.experiment import Experiment
 from src.trial import ChaseTrialWithRope, CheckHumanResponse
-from src.visualization import InitializeScreen, DrawImage, DrawBackGround, DrawImageClick, DrawText, DrawFixationPoint, DrawStateWithRope,DrawState
+from src.visualization import InitializeScreen, DrawImage, DrawBackGround, DrawImageClick, DrawText, DrawFixationPoint, DrawStateWithRope,DrawState,DrawFeedBack
 from src.pandasWriter import WriteDataFrameToCSV
 from src.loadChaseData import GenerateTrajetoryData,ScaleTrajectory,AdjustDfFPStoTraj
 
@@ -28,8 +28,9 @@ def main():
     conditionList = [1,2,3,4]  
                         #1：Chasing Present Master-Wolf Line; 2：Absent Master-Wolf Line 
                         #3：Chasing Present Master-Distractor Line; 4：Absent Master-Distractor Line 
+    
     manipulatedHyperVariables['ChaseCondition']=conditionList
-    trajetoryIndexList =[-1]
+    trajetoryIndexList =[1,2,3,4,5]
     manipulatedHyperVariables['TrajIndex'] =  trajetoryIndexList
     
     conditionValues = {1:[wolfId, masterId],2:[wolfId, masterId],3:[distractorId, masterId],4:[distractorId, masterId]}
@@ -37,7 +38,7 @@ def main():
     print('loading')
     positionIndex = [0, 1]
     FPS = 60
-    dataFileDir = '../PataData/withLineRescale'
+    dataFileDir = '../PataData/withLinePracticeRescale'
     rawXRange = [-10, 10]
     rawYRange = [-10, 10]
     scaledXRange = [200, 600]
@@ -83,19 +84,24 @@ def main():
     introductionImage2 = pygame.image.load(os.path.join(picturePath, 'introduction2.png'))
     finishImage = pygame.image.load(os.path.join(picturePath, 'over.jpg'))
     introductionImage1 = pygame.transform.scale(introductionImage1, (screenWidth, screenHeight))
-    introductionImage2 = pygame.transform.scale(introductionImage2, (screenWidth, screenHeight))
-
+    introductionImage2 = pygame.transform.scale(introductionImage2, (screenWidth, screenHeight))   
     finishImage = pygame.transform.scale(finishImage, (int(screenWidth * 2 / 3), int(screenHeight / 4)))
     clickWolfImage = pygame.image.load(os.path.join(picturePath, 'clickwolf.png'))
     clickSheepImage = pygame.image.load(os.path.join(picturePath, 'clicksheep.png'))
     restImage = pygame.image.load(os.path.join(picturePath, 'rest.jpg'))
+    falseCrossImage=pygame.image.load(os.path.join(picturePath, 'falseCross.png'))
+    falseCrossImage = pygame.transform.scale(falseCrossImage, (int(screenWidth  / 8), int(screenHeight / 8)))
+    trueHookImage=pygame.image.load(os.path.join(picturePath, 'trueHook.png'))
+    trueHookImage = pygame.transform.scale(trueHookImage, (int(screenWidth  / 8), int(screenHeight / 8)))
 
     drawImage = DrawImage(screen)
     drawText = DrawText(screen, fontSize, textColor)
     drawBackGround = DrawBackGround(screen, screenColor, xBoundary, yBoundary, lineColor, lineWidth)
     drawFixationPoint = DrawFixationPoint(screen, drawBackGround, fixationPointColor)
     drawImageClick = DrawImageClick(screen, clickImageHeight, drawText)
-   
+    drawFeedBackWhenFalse=DrawFeedBack(screen,falseCrossImage,drawBackGround)
+    drawFeedBackWhenTrue=DrawFeedBack(screen,trueHookImage,drawBackGround)
+    darwFeedBack=[drawFeedBackWhenFalse,drawFeedBackWhenTrue]
     ropeColor = THECOLORS['grey']
     ropeWidth = 4
     numRopePart = 9
@@ -109,9 +115,11 @@ def main():
     keysForCheck = {'f': 0, 'j': 1}
     checkHumanResponse = CheckHumanResponse(keysForCheck)
     #trial = ChaseTrial(conditionList,displayFrames, drawState, drawImage, stimulus, checkHumanResponse, colorSpace, numOfAgent, drawFixationPoint, drawText, drawImageClick, clickWolfImage, clickSheepImage, FPS)
-    trial = ChaseTrialWithRope(conditionValues,displayFrames, drawStateWithRope, drawImage, stimulus, checkHumanResponse, colorSpace, numOfAgent, drawFixationPoint, drawText, drawImageClick, clickWolfImage, clickSheepImage, FPS)
+    chasingJugeGroundTruth={1:1,2:0,3:1,4:0}
+    chasingIndexGroundTruth=(0,1)
+    trial = ChaseTrialWithRope(conditionValues,displayFrames, drawStateWithRope, drawImage, stimulus, checkHumanResponse, colorSpace, numOfAgent, drawFixationPoint, drawText, drawImageClick, clickWolfImage, clickSheepImage, FPS,chasingJugeGroundTruth=chasingJugeGroundTruth,chasingIndexGroundTruth=chasingIndexGroundTruth,isFeedback=True,darwFeedBack=darwFeedBack)
     
-    experiment = Experiment(triasl, writer, experimentValues,drawImage,restImage,drawBackGround)
+    experiment = Experiment(trial, writer, experimentValues,drawImage,restImage,drawBackGround)
     
     numOfBlock =1
     numOfTrialsPerBlock = 1

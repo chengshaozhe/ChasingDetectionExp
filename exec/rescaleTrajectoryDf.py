@@ -21,14 +21,14 @@ def main():
                         #1：Chasing Present Master-Wolf Line; 2：Absent Master-Wolf Line 
                         #3：Chasing Present Master-Distractor Line; 4：Absent Master-Distractor Line 
     manipulatedHyperVariables['ChaseCondition']=conditionList
-    trajetoryIndexList =[-1]
+    trajetoryIndexList =[1,2,3,4,5]
     manipulatedHyperVariables['TrajIndex'] =  trajetoryIndexList
     
     conditionValues = {1:[wolfId, masterId],2:[wolfId, masterId],3:[distractorId, masterId],4:[distractorId, masterId]}
     print('loading')
     positionIndex = [0, 1]
     FPS = 60
-    dataFileDir = '../PataData/withLine'
+    dataFileDir = '../PataData/withLinePractice'
     rawXRange = [-10, 10]
     rawYRange = [-10, 10]
     scaledXRange = [200, 600]
@@ -40,7 +40,7 @@ def main():
     trajectoryDf = lambda condition,index: pd.read_pickle(os.path.join(dataFileDir, '{}'.format(condition)+' ({}).pickle'.format(index)))
     stimulus = {condition:{index:getTrajectory(trajectoryDf(condition,index)) for index in trajetoryIndexList} for condition in conditionList}
     
-    savedataFileDir='../PataData/withLineRescale'
+    savedataFileDir='../PataData/withLinePracticeRescale'
     [[saveToPickle(stimulus[condition][index],os.path.join(savedataFileDir,'condition={}'.format(condition)+'_Index=({}).pickle'.format(index))) for index in trajetoryIndexList]  for condition in conditionList]
 
 

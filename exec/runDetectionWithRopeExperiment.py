@@ -54,8 +54,8 @@ def main():
     print('loding success')
 
     experimentValues = co.OrderedDict()
-    experimentValues["name"] = input("Please enter your name:").capitalize()
-    # experimentValues["name"]='test'    
+    # experimentValues["name"] = input("Please enter your name:").capitalize()
+    experimentValues["name"]='test'    
     screenWidth = 800
     screenHeight = 800
 
